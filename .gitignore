@@ -8,7 +8,10 @@ build/
 /data/
 *.db
 *.sqlite
+*.sqlite-shm
+*.sqlite-wal
 *.sqlite3
+server/data/
 coverage/
 .vite/
 widget/dist/
