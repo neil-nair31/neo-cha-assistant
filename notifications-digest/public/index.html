@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Neo Customs Notifications Digest</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #f4f6fb; color: #12141a; }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 28px 16px 64px; }
+    h1 { font-size: 28px; margin: 0 0 8px; }
+    .sub { color: #5a6170; margin-bottom: 20px; }
+    input, button { font: inherit; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    input[type=search], input[type=email], input[type=text] {
+      flex: 1; min-width: 180px; padding: 10px 12px; border: 1px solid #d5dae6; border-radius: 10px;
+    }
+    button { background: #1e2a5a; color: #fff; border: 0; border-radius: 10px; padding: 10px 14px; cursor: pointer; }
+    .card { background: #fff; border: 1px solid #e3e6ee; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; }
+    .card h3 { margin: 0 0 6px; font-size: 16px; }
+    .meta { font-size: 12px; color: #5a6170; margin-bottom: 8px; }
+    .warn { background: #fff8e8; border: 1px solid #f0d58a; padding: 12px; border-radius: 12px; font-size: 13px; margin: 16px 0; }
+    .panel { background: #fff; border: 1px solid #e3e6ee; border-radius: 14px; padding: 16px; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Customs Notifications Digest</h1>
+    <p class="sub">India trade &amp; customs notes curated for Neo Logistics clients — summaries only.</p>
+    <div class="row">
+      <input type="search" id="q" placeholder="Search (COO, fumigation, AEO…)" />
+      <button type="button" id="go">Search</button>
+    </div>
+    <div class="warn" id="disclaimer">Loading…</div>
+    <div id="list"></div>
+    <div class="panel">
+      <h3>Email digest subscribe</h3>
+      <p class="sub" style="margin-top:0">Get Neo’s curated summaries by email. Confirm with CHA before acting on any shipment.</p>
+      <div class="row">
+        <input type="text" id="name" placeholder="Name" />
+        <input type="email" id="email" placeholder="Email *" />
+      </div>
+      <label style="display:flex;gap:8px;font-size:13px;margin:8px 0 12px">
+        <input type="checkbox" id="consent" />
+        I agree Neo may email me this digest and contact me about customs updates.
+      </label>
+      <button type="button" id="sub">Subscribe</button>
+      <p id="subMsg" class="sub"></p>
+    </div>
+  </div>
+  <script>
+    const API = "/api";
+    async function load() {
+      const q = document.getElementById("q").value.trim();
+      const url = API + "/notifications" + (q ? ("?q=" + encodeURIComponent(q)) : "");
+      const data = await fetch(url).then((r) => r.json());
+      document.getElementById("disclaimer").textContent = data.disclaimer || "";
+      document.getElementById("list").innerHTML = (data.items || []).map((n) => `
+        <article class="card">
+          <h3>${n.title}</h3>
+          <div class="meta">${n.source.toUpperCase()} · ${n.publishedAt} · ${(n.tags||[]).join(", ")}</div>
+          <p>${n.summary}</p>
+          <p><strong>Impact:</strong> ${n.impact}</p>
+          <p><a href="${n.sourceUrl}" target="_blank" rel="noopener">Official / source →</a></p>
+        </article>`).join("");
+    }
+    document.getElementById("go").onclick = load;
+    document.getElementById("q").addEventListener("keydown", (e) => { if (e.key === "Enter") load(); });
+    document.getElementById("sub").onclick = async () => {
+      const msg = document.getElementById("subMsg");
+      if (!document.getElementById("consent").checked) {
+        msg.textContent = "Consent required.";
+        return;
+      }
+      const res = await fetch(API + "/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: document.getElementById("email").value.trim(),
+          name: document.getElementById("name").value.trim() || undefined,
+          consent: true,
+        }),
+      });
+      const data = await res.json();
+      msg.textContent = res.ok ? data.message : (data.error || "Failed");
+    };
+    load();
+  </script>
+</body>
+</html>

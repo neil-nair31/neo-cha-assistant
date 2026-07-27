@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(26, 159, 212, 0.12), transparent 55%),
+    radial-gradient(900px 400px at 90% 0%, rgba(48, 51, 146, 0.1), transparent 50%),
+    #eef0fb;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-neo px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-neo-700 disabled:opacity-60;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-xl border border-neo-200 bg-white px-4 py-2.5 text-sm font-semibold text-neo transition hover:border-neo;
+  }
+  .field {
+    @apply w-full rounded-xl border border-neo-100 bg-white px-3 py-2.5 text-sm text-ink outline-none ring-neo-blue/30 focus:ring-2;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-neo-700/70;
+  }
+  .panel {
+    @apply rounded-2xl border border-white/80 bg-white/90 shadow-card backdrop-blur;
+  }
+}

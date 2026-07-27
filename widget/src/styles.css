@@ -1,0 +1,56 @@
+:root {
+  --neo: #303392;
+  --neo-deep: #181b4a;
+  --neo-red: #c8102e;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --panel: #ffffff;
+  --bg: #eef1f8;
+  --line: rgba(48, 51, 146, 0.12);
+  --shadow: 0 24px 60px rgba(24, 27, 74, 0.28);
+  font-family: "Source Sans 3", system-ui, sans-serif;
+  color: var(--ink);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(48, 51, 146, 0.18), transparent 55%),
+    radial-gradient(900px 500px at 90% 0%, rgba(200, 16, 46, 0.12), transparent 50%),
+    linear-gradient(165deg, #0b1028 0%, #1a1f55 42%, #303392 100%);
+}
+
+.demo-shell {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 8rem;
+  color: #f8fafc;
+}
+
+.demo-shell h1 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.03em;
+}
+
+.demo-shell p {
+  max-width: 42rem;
+  line-height: 1.6;
+  color: rgba(248, 250, 252, 0.82);
+}
+
+.demo-shell .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.08);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}

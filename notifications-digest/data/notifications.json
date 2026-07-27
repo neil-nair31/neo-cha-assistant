@@ -1,0 +1,86 @@
+[
+  {
+    "id": "neo-coo",
+    "title": "Certificate of Origin",
+    "summary": "Neo Logistics media note on Certificate of Origin (COO) documentation commonly required for preference claims and destination customs formalities.",
+    "impact": "Exporters should confirm the correct COO type (preferential vs non-preferential) and issuing body before cargo cut-off. Neo’s CHA desk can guide document sequencing for Cochin/Chennai shipments.",
+    "tags": ["documentation", "coo", "export"],
+    "source": "neo",
+    "publishedAt": "2020-01-01",
+    "sourceUrl": "https://www.neologistics.org/notification-detail/4/",
+    "neoUrl": "https://www.neologistics.org/notification-detail/4/"
+  },
+  {
+    "id": "neo-australian-fumigation",
+    "title": "Australian Fumigation",
+    "summary": "Neo Logistics guidance note relating to Australian fumigation / biosecurity treatment expectations for outbound cargo.",
+    "impact": "Shipments to Australia may need approved treatment certificates and timing aligned with sailing. Confirm commodity-specific AQIS/DAFF style requirements with Neo before packing completion.",
+    "tags": ["fumigation", "australia", "export", "compliance"],
+    "source": "neo",
+    "publishedAt": "2020-01-01",
+    "sourceUrl": "https://www.neologistics.org/notification-detail/3/",
+    "neoUrl": "https://www.neologistics.org/notification-detail/3/"
+  },
+  {
+    "id": "neo-cbic-47-2015-2020",
+    "title": "CBIC Notification No. 47/2015-2020",
+    "summary": "Neo-hosted reference to CBIC / FTP-era Notification No. 47/2015-2020 as published on the Neo Logistics media centre.",
+    "impact": "Treat as a pointer only — open the official CBIC / DGFT text for operative clauses, amendments, and validity. Neo CHA can map relevance to your HS lines and shipments.",
+    "tags": ["cbic", "ftp", "import", "export"],
+    "source": "neo",
+    "publishedAt": "2020-01-01",
+    "sourceUrl": "https://www.neologistics.org/notification-detail/5/",
+    "neoUrl": "https://www.neologistics.org/notification-detail/5/"
+  },
+  {
+    "id": "cbic-sample-aeo",
+    "title": "AEO programme — authorised economic operator (India)",
+    "summary": "Public CBIC AEO framework helps trusted traders access facilitations (e.g. deferred payment / faster clearances depending on tier). Neo holds AEO-LO.",
+    "impact": "Importers/exporters working with an AEO broker may see process facilitations, but shipments still need correct docs and self-assessment. Confirm current AEO benefits with Neo’s team — do not assume automatic duty concessions.",
+    "tags": ["aeo", "facilitation", "cbic"],
+    "source": "cbic",
+    "publishedAt": "2024-06-01",
+    "sourceUrl": "https://www.cbic.gov.in/"
+  },
+  {
+    "id": "cbic-sample-self-assessment",
+    "title": "Self-assessment remains the importer/exporter’s duty",
+    "summary": "Under India’s customs self-assessment framework, the importer/exporter is responsible for correct classification, valuation, and exemption claims on the Bill of Entry / Shipping Bill.",
+    "impact": "Use Neo HS Finder shortlists and this digest only as prep. Final CTH, notifications, and exemptions must be confirmed by Neo’s licensed CHA before filing on ICEGATE.",
+    "tags": ["self-assessment", "compliance", "import", "export"],
+    "source": "cbic",
+    "publishedAt": "2024-01-15",
+    "sourceUrl": "https://www.cbic.gov.in/"
+  },
+  {
+    "id": "dgft-sample-itc-hs",
+    "title": "ITC (HS) import policy — verify Free / Restricted / Prohibited",
+    "summary": "DGFT ITC (HS) schedules set import policy conditions (Free, Restricted, Prohibited, etc.) on top of the customs tariff line.",
+    "impact": "A CTH that looks tariff-clear can still be policy-restricted. Check live DGFT policy for your 8-digit line and licences before contracting cargo. Neo can flag common restricted categories for your trade lane.",
+    "tags": ["dgft", "itc-hs", "import-policy"],
+    "source": "dgft",
+    "publishedAt": "2024-09-01",
+    "sourceUrl": "https://www.dgft.gov.in/"
+  },
+  {
+    "id": "cbic-sample-origin",
+    "title": "Preferential origin & FTA documentation hygiene",
+    "summary": "Claims under FTAs / preferential rates generally need valid origin proofs (e.g. COO / origin declarations under the relevant agreement) matching the commercial documents.",
+    "impact": "Mismatched supplier declarations or stale COOs are a common assessment risk. Align invoice, packing list, and origin docs with Neo before seeking preference.",
+    "tags": ["coo", "fta", "documentation", "import"],
+    "source": "cbic",
+    "publishedAt": "2024-03-01",
+    "sourceUrl": "https://www.cbic.gov.in/"
+  },
+  {
+    "id": "neo-practice-icegate",
+    "title": "ICEGATE filing — confirm notifications on the date of import/export",
+    "summary": "Duty, exemption, and procedure notifications change. ICEGATE / CBIC publications on the relevant date control the assessment — not website summaries.",
+    "impact": "Bookmark official sources. Ask Neo CHA to validate any summary in this digest against the live notification text before you rely on it commercially.",
+    "tags": ["icegate", "duty", "practice"],
+    "source": "neo",
+    "publishedAt": "2025-01-01",
+    "sourceUrl": "https://www.icegate.gov.in/",
+    "neoUrl": "https://www.neologistics.org/customs-notification/"
+  }
+]

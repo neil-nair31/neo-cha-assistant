@@ -1,0 +1,182 @@
+{
+  "source": "Neo Logistics CHA desk — NEO LOGISTICS.xlsx (goods + India CTH as filed)",
+  "ports": ["COCHIN", "CHENNAI"],
+  "note": "Authoritative desk filing precedents for Neo Assist HS Finder. Educational tool still requires CHA confirmation before BoE/SB. VAE code normalized from 390521000 → 39052100 (8-digit CTH).",
+  "rows": [
+    {
+      "sl": 1,
+      "tradeFlow": "import",
+      "goods": "WHITE CEMENT CLINKER",
+      "code": "25231000",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 2,
+      "tradeFlow": "import",
+      "goods": "SODIUM CHLORATE",
+      "code": "28291100",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 3,
+      "tradeFlow": "import",
+      "goods": "HYDRAFIBER",
+      "code": "47010000",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 4,
+      "tradeFlow": "import",
+      "goods": "QUICK LIME",
+      "code": "25221000",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 5,
+      "tradeFlow": "import",
+      "goods": "GYPSUM PLASTER",
+      "code": "25202010",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 6,
+      "tradeFlow": "import",
+      "goods": "VAE DISPERSION POLYMER FOR USE IN PAINTS",
+      "code": "39052100",
+      "ports": ["COCHIN", "CHENNAI"]
+    },
+    {
+      "sl": 7,
+      "tradeFlow": "import",
+      "goods": "TITANIUM DIOXIDE",
+      "code": "32061110",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 8,
+      "tradeFlow": "import",
+      "goods": "DRIED RAW CASHEW NUTS",
+      "code": "08013100",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 9,
+      "tradeFlow": "import",
+      "goods": "SANITARY WARE - CERAMIC WASH BASIN",
+      "code": "69101000",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 10,
+      "tradeFlow": "import",
+      "goods": "SANITARY WARE - PLASTIC TOILET SEAT COVER",
+      "code": "39222000",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 11,
+      "tradeFlow": "import",
+      "goods": "BLEACHED SOFTWOOD KRAFT PULP",
+      "code": "47032100",
+      "ports": ["COCHIN", "CHENNAI"]
+    },
+    {
+      "sl": 12,
+      "tradeFlow": "import",
+      "goods": "UNBLEACHED SOFTWOOD KRAFT PULP",
+      "code": "47031100",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 13,
+      "tradeFlow": "import",
+      "goods": "WOOD FREE PRINTING PAPER IN SHEETS",
+      "code": "48025790",
+      "ports": ["CHENNAI"]
+    },
+    {
+      "sl": 14,
+      "tradeFlow": "import",
+      "goods": "ARTIFICIAL GRASS",
+      "code": "57033100",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 15,
+      "tradeFlow": "import",
+      "goods": "UNFRAMED GLASS MIRROR'S",
+      "code": "70099100",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 16,
+      "tradeFlow": "import",
+      "goods": "BATHROOM CABINET",
+      "code": "94037000",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 17,
+      "tradeFlow": "import",
+      "goods": "PVC FOAM BOARD",
+      "code": "39211200",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 18,
+      "tradeFlow": "import",
+      "goods": "WHITE PORTLAND CEMENT",
+      "code": "25232100",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 19,
+      "tradeFlow": "export",
+      "goods": "CASHEW KERNELS",
+      "code": "08013220",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 20,
+      "tradeFlow": "export",
+      "goods": "COCO PEAT",
+      "code": "53050040",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 21,
+      "tradeFlow": "export",
+      "goods": "COTTON YARN",
+      "code": "52061200",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 22,
+      "tradeFlow": "export",
+      "goods": "VERMI COMPOST",
+      "code": "31010099",
+      "ports": ["COCHIN"]
+    },
+    {
+      "sl": 23,
+      "tradeFlow": "export",
+      "goods": "SPUN PIPES MADE OF CAST IRON",
+      "code": "73030030",
+      "ports": ["CHENNAI"]
+    },
+    {
+      "sl": 24,
+      "tradeFlow": "export",
+      "goods": "GASKET",
+      "code": "40169340",
+      "ports": ["CHENNAI"]
+    },
+    {
+      "sl": 25,
+      "tradeFlow": "export",
+      "goods": "LUBRICANT FOR PIPE GASKET",
+      "code": "34039900",
+      "ports": ["CHENNAI"]
+    }
+  ]
+}

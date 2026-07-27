@@ -1,0 +1,431 @@
+{
+  "clients": [
+    {
+      "id": "cli_acme",
+      "company": "Acme Agro Exports Pvt Ltd",
+      "email": "ops@acmeagro.demo",
+      "password": "neo-demo",
+      "contactName": "Priya Nair",
+      "phone": "+91 98765 43210",
+      "ports": ["COCHIN", "CHENNAI"]
+    },
+    {
+      "id": "cli_pearl",
+      "company": "Pearl Chem Impex",
+      "email": "import@pearlchem.demo",
+      "password": "neo-demo",
+      "contactName": "Ravi Menon",
+      "phone": "+91 98123 45678",
+      "ports": ["COCHIN", "CHENNAI"]
+    }
+  ],
+  "staff": [
+    {
+      "id": "stf_cochin",
+      "name": "Anjali Krishnan",
+      "email": "desk.cochin@neologistics.demo",
+      "password": "neo-ops",
+      "role": "ops",
+      "port": "COCHIN"
+    },
+    {
+      "id": "stf_chennai",
+      "name": "Karthik Raman",
+      "email": "desk.chennai@neologistics.demo",
+      "password": "neo-ops",
+      "role": "ops",
+      "port": "CHENNAI"
+    },
+    {
+      "id": "stf_admin",
+      "name": "Suraj Desk Admin",
+      "email": "admin@neologistics.demo",
+      "password": "neo-ops",
+      "role": "admin",
+      "port": "BOTH"
+    }
+  ],
+  "shipments": [
+    {
+      "id": "shp_001",
+      "clientId": "cli_acme",
+      "ref": "NEO-EXP-2607-0142",
+      "tradeFlow": "export",
+      "status": "gated_out",
+      "statusLabel": "Gated out · sailing",
+      "priority": "normal",
+      "port": "COCHIN",
+      "destination": "Rotterdam, NL",
+      "origin": "Cochin, IN",
+      "goods": "Cashew kernels W320 whole",
+      "cth": "08013220",
+      "cthDotted": "0801.32.20",
+      "blNumber": "MAEU2607142COK",
+      "bookingRef": "BKG-COK-88921",
+      "vessel": "MSC ANISHA R",
+      "voyage": "FY624A",
+      "eta": "2026-08-12",
+      "etd": "2026-07-24",
+      "lastUpdate": "2026-07-23T08:40:00+05:30",
+      "containers": [
+        {
+          "number": "MSCU7845123",
+          "type": "40HC",
+          "seal": "IN884201",
+          "packages": 720,
+          "grossWeightKg": 18420,
+          "status": "Loaded on vessel"
+        },
+        {
+          "number": "TGHU5521987",
+          "type": "40HC",
+          "seal": "IN884202",
+          "packages": 720,
+          "grossWeightKg": 18390,
+          "status": "Loaded on vessel"
+        }
+      ],
+      "milestones": [
+        { "id": "m1", "label": "Booking confirmed", "at": "2026-07-10T11:00:00+05:30", "done": true, "note": "Space confirmed with line" },
+        { "id": "m2", "label": "Cargo received at CFS", "at": "2026-07-18T16:20:00+05:30", "done": true },
+        { "id": "m3", "label": "Shipping Bill filed", "at": "2026-07-19T10:05:00+05:30", "done": true, "note": "SB No. 7845121" },
+        { "id": "m4", "label": "LEO / Let Export Order", "at": "2026-07-20T14:30:00+05:30", "done": true },
+        { "id": "m5", "label": "Gate-in at terminal", "at": "2026-07-21T09:15:00+05:30", "done": true },
+        { "id": "m6", "label": "Loaded on vessel", "at": "2026-07-22T22:10:00+05:30", "done": true },
+        { "id": "m7", "label": "Vessel sailed", "at": "2026-07-24T18:00:00+05:30", "done": false, "note": "ETD 24 Jul evening" }
+      ],
+      "documents": [
+        { "id": "d1", "name": "Commercial Invoice", "type": "invoice", "status": "available", "updatedAt": "2026-07-18" },
+        { "id": "d2", "name": "Packing List", "type": "packing_list", "status": "available", "updatedAt": "2026-07-18" },
+        { "id": "d3", "name": "Shipping Bill (copy)", "type": "shipping_bill", "status": "available", "updatedAt": "2026-07-19" },
+        { "id": "d4", "name": "Draft Bill of Lading", "type": "bl", "status": "available", "updatedAt": "2026-07-22" },
+        { "id": "d5", "name": "Final BL", "type": "bl", "status": "pending", "updatedAt": null }
+      ],
+      "charges": [
+        { "label": "CHA / documentation", "amount": 18500, "currency": "INR", "status": "invoiced" },
+        { "label": "CFS handling", "amount": 42000, "currency": "INR", "status": "invoiced" },
+        { "label": "Transport to terminal", "amount": 28000, "currency": "INR", "status": "paid" }
+      ],
+      "dispatch": {
+        "mode": "CY / terminal",
+        "transporter": "Neo contracted fleet",
+        "vehicle": "KL-07-AB-4421",
+        "driverPhone": "+91 90000 11122",
+        "scheduledAt": "2026-07-21T06:00:00+05:30",
+        "deliveredAt": "2026-07-21T08:45:00+05:30",
+        "notes": "Both containers gated in without detention."
+      },
+      "alerts": [
+        { "id": "a1", "level": "info", "message": "Vessel ETD confirmed for 24 Jul evening tide.", "at": "2026-07-23T08:40:00+05:30" }
+      ],
+      "deskNotes": "Export cashew — Cochin specialty. CTH aligned with Neo desk precedent 0801.32.20."
+    },
+    {
+      "id": "shp_002",
+      "clientId": "cli_pearl",
+      "ref": "NEO-IMP-2607-0088",
+      "tradeFlow": "import",
+      "status": "under_assessment",
+      "statusLabel": "Under customs assessment",
+      "priority": "high",
+      "port": "COCHIN",
+      "destination": "Cochin, IN",
+      "origin": "Shanghai, CN",
+      "goods": "Titanium dioxide pigment",
+      "cth": "32061110",
+      "cthDotted": "3206.11.10",
+      "blNumber": "COSU2607088SHA",
+      "bookingRef": null,
+      "vessel": "COSCO SHIPPING AZALEA",
+      "voyage": "069W",
+      "eta": "2026-07-22",
+      "etd": "2026-07-05",
+      "lastUpdate": "2026-07-23T15:10:00+05:30",
+      "containers": [
+        {
+          "number": "CBHU9388210",
+          "type": "20GP",
+          "seal": "CN772190",
+          "packages": 800,
+          "grossWeightKg": 20100,
+          "status": "Arrived · pending duty"
+        }
+      ],
+      "milestones": [
+        { "id": "m1", "label": "Vessel arrived", "at": "2026-07-22T06:30:00+05:30", "done": true },
+        { "id": "m2", "label": "IGM filed", "at": "2026-07-22T11:00:00+05:30", "done": true },
+        { "id": "m3", "label": "Bill of Entry filed", "at": "2026-07-22T17:45:00+05:30", "done": true, "note": "BE No. 45120987" },
+        { "id": "m4", "label": "Under assessment", "at": "2026-07-23T10:20:00+05:30", "done": true },
+        { "id": "m5", "label": "Duty payment", "at": null, "done": false, "note": "Awaiting assessment order" },
+        { "id": "m6", "label": "Out of charge", "at": null, "done": false },
+        { "id": "m7", "label": "Gate-out / delivery", "at": null, "done": false }
+      ],
+      "documents": [
+        { "id": "d1", "name": "Commercial Invoice", "type": "invoice", "status": "available", "updatedAt": "2026-07-08" },
+        { "id": "d2", "name": "Packing List", "type": "packing_list", "status": "available", "updatedAt": "2026-07-08" },
+        { "id": "d3", "name": "Bill of Lading", "type": "bl", "status": "available", "updatedAt": "2026-07-10" },
+        { "id": "d4", "name": "Bill of Entry (copy)", "type": "bill_of_entry", "status": "available", "updatedAt": "2026-07-22" },
+        { "id": "d5", "name": "Duty challan", "type": "duty", "status": "pending", "updatedAt": null },
+        { "id": "d6", "name": "Delivery Order", "type": "do", "status": "pending", "updatedAt": null }
+      ],
+      "charges": [
+        { "label": "Estimated BCD + IGST (indicative)", "amount": 385000, "currency": "INR", "status": "pending" },
+        { "label": "CHA / clearance", "amount": 22000, "currency": "INR", "status": "invoiced" },
+        { "label": "CFS / destuffing (if required)", "amount": 15000, "currency": "INR", "status": "estimated" }
+      ],
+      "dispatch": {
+        "mode": "Factory delivery",
+        "transporter": "To be assigned after OOC",
+        "vehicle": null,
+        "driverPhone": null,
+        "scheduledAt": null,
+        "deliveredAt": null,
+        "notes": "Delivery slot will be confirmed once duty is paid and OOC is granted."
+      },
+      "alerts": [
+        { "id": "a1", "level": "warning", "message": "Duty payment pending — assessment in progress. Neo desk will share challan as soon as available.", "at": "2026-07-23T15:10:00+05:30" },
+        { "id": "a2", "level": "info", "message": "Container free days end 29 Jul — plan delivery to avoid detention.", "at": "2026-07-23T09:00:00+05:30" }
+      ],
+      "deskNotes": "Import TiO₂ — Neo desk filing precedent 3206.11.10 at Cochin."
+    },
+    {
+      "id": "shp_003",
+      "clientId": "cli_pearl",
+      "ref": "NEO-IMP-2607-0091",
+      "tradeFlow": "import",
+      "status": "out_of_charge",
+      "statusLabel": "Out of charge · dispatch booked",
+      "priority": "normal",
+      "port": "CHENNAI",
+      "destination": "Chennai, IN",
+      "origin": "Hamburg, DE",
+      "goods": "VAE dispersion polymer for paints",
+      "cth": "39052100",
+      "cthDotted": "3905.21.00",
+      "blNumber": "HLCU2607091HAM",
+      "bookingRef": null,
+      "vessel": "AL RIFFA",
+      "voyage": "014E",
+      "eta": "2026-07-18",
+      "etd": "2026-06-28",
+      "lastUpdate": "2026-07-23T12:00:00+05:30",
+      "containers": [
+        {
+          "number": "HLXU4456712",
+          "type": "20GP",
+          "seal": "DE441902",
+          "packages": 18,
+          "grossWeightKg": 18950,
+          "status": "OOC · awaiting pickup"
+        }
+      ],
+      "milestones": [
+        { "id": "m1", "label": "Vessel arrived", "at": "2026-07-18T04:00:00+05:30", "done": true },
+        { "id": "m2", "label": "Bill of Entry filed", "at": "2026-07-18T15:30:00+05:30", "done": true },
+        { "id": "m3", "label": "Duty paid", "at": "2026-07-20T11:10:00+05:30", "done": true },
+        { "id": "m4", "label": "Out of charge", "at": "2026-07-21T09:40:00+05:30", "done": true },
+        { "id": "m5", "label": "Delivery Order ready", "at": "2026-07-22T16:00:00+05:30", "done": true },
+        { "id": "m6", "label": "Factory delivery", "at": "2026-07-24T10:00:00+05:30", "done": false, "note": "Truck slotted 24 Jul 10:00" }
+      ],
+      "documents": [
+        { "id": "d1", "name": "Commercial Invoice", "type": "invoice", "status": "available", "updatedAt": "2026-07-01" },
+        { "id": "d2", "name": "Bill of Entry", "type": "bill_of_entry", "status": "available", "updatedAt": "2026-07-18" },
+        { "id": "d3", "name": "Duty challan", "type": "duty", "status": "available", "updatedAt": "2026-07-20" },
+        { "id": "d4", "name": "Delivery Order", "type": "do", "status": "available", "updatedAt": "2026-07-22" },
+        { "id": "d5", "name": "Gate pass", "type": "gate_pass", "status": "pending", "updatedAt": null }
+      ],
+      "charges": [
+        { "label": "Duty (paid)", "amount": 212400, "currency": "INR", "status": "paid" },
+        { "label": "CHA / clearance", "amount": 19500, "currency": "INR", "status": "paid" },
+        { "label": "Transport to factory", "amount": 18500, "currency": "INR", "status": "invoiced" }
+      ],
+      "dispatch": {
+        "mode": "Factory delivery",
+        "transporter": "Chennai bonded carrier",
+        "vehicle": "TN-09-CD-7788",
+        "driverPhone": "+91 94444 22001",
+        "scheduledAt": "2026-07-24T10:00:00+05:30",
+        "deliveredAt": null,
+        "notes": "Factory gate open 09:00–18:00. Share DO to security."
+      },
+      "alerts": [
+        { "id": "a1", "level": "success", "message": "Out of charge granted. Delivery truck booked for 24 Jul.", "at": "2026-07-23T12:00:00+05:30" }
+      ],
+      "deskNotes": "VAE dispersion — Neo desk precedent 3905.21.00 (Cochin & Chennai)."
+    },
+    {
+      "id": "shp_004",
+      "clientId": "cli_acme",
+      "ref": "NEO-EXP-2607-0155",
+      "tradeFlow": "export",
+      "status": "docs_pending",
+      "statusLabel": "Documents pending from shipper",
+      "priority": "high",
+      "port": "COCHIN",
+      "destination": "Jebel Ali, AE",
+      "origin": "Cochin, IN",
+      "goods": "Coco peat blocks",
+      "cth": "53050040",
+      "cthDotted": "5305.00.40",
+      "blNumber": null,
+      "bookingRef": "BKG-COK-90112",
+      "vessel": "TBN",
+      "voyage": "TBN",
+      "eta": null,
+      "etd": "2026-07-28",
+      "lastUpdate": "2026-07-23T11:25:00+05:30",
+      "containers": [
+        {
+          "number": "TBN (1 x 40HC)",
+          "type": "40HC",
+          "seal": null,
+          "packages": 0,
+          "grossWeightKg": 0,
+          "status": "Awaiting cargo stuffing"
+        }
+      ],
+      "milestones": [
+        { "id": "m1", "label": "Booking confirmed", "at": "2026-07-16T09:00:00+05:30", "done": true },
+        { "id": "m2", "label": "Invoice & packing list", "at": null, "done": false, "note": "Waiting on shipper" },
+        { "id": "m3", "label": "Shipping Bill draft", "at": null, "done": false },
+        { "id": "m4", "label": "Stuffing / gate-in", "at": null, "done": false },
+        { "id": "m5", "label": "Vessel load", "at": null, "done": false }
+      ],
+      "documents": [
+        { "id": "d1", "name": "Commercial Invoice", "type": "invoice", "status": "pending", "updatedAt": null },
+        { "id": "d2", "name": "Packing List", "type": "packing_list", "status": "pending", "updatedAt": null },
+        { "id": "d3", "name": "Phyto / quality cert", "type": "certificate", "status": "pending", "updatedAt": null }
+      ],
+      "charges": [
+        { "label": "CHA / documentation (estimate)", "amount": 12000, "currency": "INR", "status": "estimated" }
+      ],
+      "dispatch": null,
+      "alerts": [
+        { "id": "a1", "level": "warning", "message": "Please upload commercial invoice + packing list by 25 Jul to protect ETD 28 Jul.", "at": "2026-07-23T11:25:00+05:30" }
+      ],
+      "deskNotes": "Coco peat / coir pith — Neo desk precedent 5305.00.40."
+    },
+    {
+      "id": "shp_005",
+      "clientId": "cli_pearl",
+      "ref": "NEO-IMP-2606-0070",
+      "tradeFlow": "import",
+      "status": "delivered",
+      "statusLabel": "Delivered to factory",
+      "priority": "normal",
+      "port": "COCHIN",
+      "destination": "Ernakulam factory",
+      "origin": "Vancouver, CA",
+      "goods": "Bleached softwood kraft pulp",
+      "cth": "47032100",
+      "cthDotted": "4703.21.00",
+      "blNumber": "ONEY2606070YVR",
+      "bookingRef": null,
+      "vessel": "ONE COMPETENCE",
+      "voyage": "012W",
+      "eta": "2026-06-28",
+      "etd": "2026-06-08",
+      "lastUpdate": "2026-07-05T17:00:00+05:30",
+      "containers": [
+        {
+          "number": "ONEU6671203",
+          "type": "40HC",
+          "seal": "CA229811",
+          "packages": 16,
+          "grossWeightKg": 22500,
+          "status": "Empty returned"
+        },
+        {
+          "number": "TEMU3344891",
+          "type": "40HC",
+          "seal": "CA229812",
+          "packages": 16,
+          "grossWeightKg": 22480,
+          "status": "Empty returned"
+        }
+      ],
+      "milestones": [
+        { "id": "m1", "label": "Vessel arrived", "at": "2026-06-28T07:00:00+05:30", "done": true },
+        { "id": "m2", "label": "Bill of Entry + duty", "at": "2026-06-30T14:00:00+05:30", "done": true },
+        { "id": "m3", "label": "Out of charge", "at": "2026-07-01T11:20:00+05:30", "done": true },
+        { "id": "m4", "label": "Factory delivery", "at": "2026-07-02T15:45:00+05:30", "done": true },
+        { "id": "m5", "label": "Empty return", "at": "2026-07-05T16:30:00+05:30", "done": true }
+      ],
+      "documents": [
+        { "id": "d1", "name": "Commercial Invoice", "type": "invoice", "status": "available", "updatedAt": "2026-06-10" },
+        { "id": "d2", "name": "Bill of Entry", "type": "bill_of_entry", "status": "available", "updatedAt": "2026-06-30" },
+        { "id": "d3", "name": "Delivery proof (POD)", "type": "pod", "status": "available", "updatedAt": "2026-07-02" },
+        { "id": "d4", "name": "Final CHA invoice", "type": "invoice", "status": "available", "updatedAt": "2026-07-04" }
+      ],
+      "charges": [
+        { "label": "Duty (paid)", "amount": 498000, "currency": "INR", "status": "paid" },
+        { "label": "CHA / clearance", "amount": 32000, "currency": "INR", "status": "paid" },
+        { "label": "Transport + empty return", "amount": 41000, "currency": "INR", "status": "paid" }
+      ],
+      "dispatch": {
+        "mode": "Factory delivery",
+        "transporter": "Neo contracted fleet",
+        "vehicle": "KL-07-XY-1902",
+        "driverPhone": "+91 90000 33445",
+        "scheduledAt": "2026-07-02T09:00:00+05:30",
+        "deliveredAt": "2026-07-02T15:45:00+05:30",
+        "notes": "Both containers delivered; empties returned to depot 5 Jul."
+      },
+      "alerts": [],
+      "deskNotes": "Bleached softwood kraft — Neo desk precedent 4703.21.00."
+    },
+    {
+      "id": "shp_006",
+      "clientId": "cli_acme",
+      "ref": "NEO-IMP-2607-0102",
+      "tradeFlow": "import",
+      "status": "arrived",
+      "statusLabel": "Arrived · BE prep",
+      "priority": "normal",
+      "port": "COCHIN",
+      "destination": "Cochin, IN",
+      "origin": "Fujairah, AE",
+      "goods": "White cement clinker",
+      "cth": "25231000",
+      "cthDotted": "2523.10.00",
+      "blNumber": "HLCU2607102FUJ",
+      "bookingRef": null,
+      "vessel": "HAPAG BREMEN",
+      "voyage": "022E",
+      "eta": "2026-07-23",
+      "etd": "2026-07-12",
+      "lastUpdate": "2026-07-23T07:05:00+05:30",
+      "containers": [
+        {
+          "number": "Bulk / break-bulk lot",
+          "type": "BREAKBULK",
+          "seal": null,
+          "packages": 1,
+          "grossWeightKg": 12500000,
+          "status": "Arrived at berth"
+        }
+      ],
+      "milestones": [
+        { "id": "m1", "label": "Vessel arrived", "at": "2026-07-23T05:40:00+05:30", "done": true },
+        { "id": "m2", "label": "IGM / BE prep", "at": "2026-07-23T07:05:00+05:30", "done": true, "note": "Docs under desk review" },
+        { "id": "m3", "label": "Bill of Entry filing", "at": null, "done": false },
+        { "id": "m4", "label": "Duty & OOC", "at": null, "done": false },
+        { "id": "m5", "label": "Discharge / delivery", "at": null, "done": false }
+      ],
+      "documents": [
+        { "id": "d1", "name": "Commercial Invoice", "type": "invoice", "status": "available", "updatedAt": "2026-07-14" },
+        { "id": "d2", "name": "Bill of Lading", "type": "bl", "status": "available", "updatedAt": "2026-07-15" },
+        { "id": "d3", "name": "Certificate of origin", "type": "certificate", "status": "available", "updatedAt": "2026-07-14" },
+        { "id": "d4", "name": "Bill of Entry", "type": "bill_of_entry", "status": "pending", "updatedAt": null }
+      ],
+      "charges": [
+        { "label": "CHA / clearance (estimate)", "amount": 45000, "currency": "INR", "status": "estimated" }
+      ],
+      "dispatch": null,
+      "alerts": [
+        { "id": "a1", "level": "info", "message": "Vessel alongside. Neo desk preparing Bill of Entry — CTH 2523.10.00 (Neo filed line).", "at": "2026-07-23T07:05:00+05:30" }
+      ],
+      "deskNotes": "White cement clinker — Neo desk precedent 2523.10.00."
+    }
+  ]
+}

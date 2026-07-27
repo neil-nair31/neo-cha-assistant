@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "description": "Approved sources only. Sync writes to knowledge/synced/ then runs ingest. Never add unvetted URLs.",
+  "sources": [
+    {
+      "id": "neo-home",
+      "url": "https://www.neologistics.org/",
+      "section": "brochures",
+      "title": "Neo Logistics Home (synced)",
+      "schedule": "weekly"
+    },
+    {
+      "id": "neo-about",
+      "url": "https://www.neologistics.org/about-us/",
+      "section": "brochures",
+      "title": "About Neo (synced)",
+      "schedule": "weekly"
+    },
+    {
+      "id": "neo-industries",
+      "url": "https://www.neologistics.org/core-industries/",
+      "section": "brochures",
+      "title": "Industries (synced)",
+      "schedule": "weekly"
+    },
+    {
+      "id": "neo-expertise",
+      "url": "https://www.neologistics.org/our-expertise/",
+      "section": "services",
+      "title": "Our Expertise (synced)",
+      "schedule": "weekly"
+    },
+    {
+      "id": "neo-contact",
+      "url": "https://www.neologistics.org/contact-us/",
+      "section": "brochures",
+      "title": "Contact (synced)",
+      "schedule": "weekly"
+    },
+    {
+      "id": "neo-kyc",
+      "url": "https://www.neologistics.org/know-your-customer/",
+      "section": "sops",
+      "title": "KYC onboarding (synced)",
+      "schedule": "monthly"
+    }
+  ],
+  "manualReviewRequired": [
+    "CBIC notification PDFs",
+    "Neo internal SOPs",
+    "Pricing sheets"
+  ]
+}

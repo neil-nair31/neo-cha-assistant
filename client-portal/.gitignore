@@ -1,0 +1,6 @@
+node_modules/
+web/node_modules/
+web/dist/
+data/runtime.json
+dist/
+*.log

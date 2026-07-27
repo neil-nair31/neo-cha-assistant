@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Neo Digest Ops — Review Gate</title>
+    <style>
+      :root {
+        --ink: #0f172a;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --ok: #166534;
+        --bad: #991b1b;
+        --bg: #f8fafc;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: linear-gradient(180deg, #eef2ff 0%, var(--bg) 40%);
+        color: var(--ink);
+      }
+      main { max-width: 920px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+      h1 { font-size: 1.6rem; margin: 0 0 0.35rem; }
+      .sub { color: var(--muted); margin-bottom: 1.5rem; }
+      .row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+      input, button {
+        font: inherit;
+        padding: 0.55rem 0.85rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--line);
+      }
+      button {
+        background: #0f172a;
+        color: #fff;
+        border-color: #0f172a;
+        cursor: pointer;
+      }
+      button.secondary { background: #fff; color: var(--ink); }
+      button.danger { background: #fff; color: var(--bad); border-color: #fecaca; }
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 0.85rem;
+        padding: 1rem 1.1rem;
+        margin-bottom: 0.75rem;
+      }
+      .meta { font-size: 0.8rem; color: var(--muted); }
+      .badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        padding: 0.15rem 0.45rem;
+        border-radius: 999px;
+        background: #f1f5f9;
+        margin-right: 0.35rem;
+      }
+      .actions { margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+      #status { white-space: pre-wrap; font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
+      a { color: #1d4ed8; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Neo Digest Ops</h1>
+      <p class="sub">
+        Enterprise review gate — drafts never hit <code>/blogs</code> until approved.
+      </p>
+      <div class="row">
+        <input id="token" type="password" placeholder="x-digest-token (if set)" style="min-width: 240px" />
+        <button type="button" id="reload">Load drafts</button>
+        <button type="button" id="scan" class="secondary">Run scan</button>
+        <button type="button" id="approveAll" class="secondary">Approve all q≥45</button>
+      </div>
+      <div id="status"></div>
+      <div id="list"></div>
+    </main>
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const headers = () => {
+        const h = { "Content-Type": "application/json" };
+        const t = $("token").value.trim();
+        if (t) h["x-digest-token"] = t;
+        return h;
+      };
+      function setStatus(msg) { $("status").textContent = msg; }
+
+      async function loadDrafts() {
+        setStatus("Loading…");
+        const res = await fetch("/api/drafts", { headers: headers() });
+        const data = await res.json();
+        if (!res.ok) {
+          setStatus(data.error || "Failed");
+          return;
+        }
+        const drafts = data.drafts || [];
+        setStatus(`${drafts.length} draft(s) awaiting review`);
+        $("list").innerHTML = drafts
+          .map(
+            (p) => `
+          <article class="card" data-id="${p.id}">
+            <div class="meta">
+              <span class="badge">${p.source}</span>
+              <span class="badge">${p.engine}</span>
+              <span class="badge">q${p.qualityScore}</span>
+              ${p.publishedAt} · ${p.noticeNo}
+            </div>
+            <h3 style="margin:0.4rem 0 0.35rem;font-size:1.05rem">${p.title}</h3>
+            <p style="margin:0;color:#334155;font-size:0.92rem">${p.excerpt}</p>
+            <p class="meta" style="margin-top:0.5rem"><a href="${p.sourceUrl}" target="_blank" rel="noopener">Official source</a></p>
+            <div class="actions">
+              <button type="button" data-act="approve">Approve → blog</button>
+              <button type="button" class="danger" data-act="reject">Reject</button>
+            </div>
+          </article>`
+          )
+          .join("");
+      }
+
+      $("list").addEventListener("click", async (e) => {
+        const btn = e.target.closest("button[data-act]");
+        if (!btn) return;
+        const card = btn.closest("[data-id]");
+        const id = card.dataset.id;
+        const act = btn.dataset.act;
+        const res = await fetch(`/api/blog-posts/${id}/${act}`, {
+          method: "POST",
+          headers: headers(),
+          body: JSON.stringify({ reviewedBy: "ops-ui" }),
+        });
+        const data = await res.json();
+        setStatus(data.message || data.error || act);
+        if (res.ok) card.remove();
+      });
+
+      $("reload").onclick = () => void loadDrafts();
+      $("scan").onclick = async () => {
+        setStatus("Scanning CBIC + DGFT…");
+        const res = await fetch("/api/scan", {
+          method: "POST",
+          headers: headers(),
+          body: JSON.stringify({ maxNew: 8 }),
+        });
+        const data = await res.json();
+        setStatus(JSON.stringify(data, null, 2));
+        if (res.ok) await loadDrafts();
+      };
+      $("approveAll").onclick = async () => {
+        const res = await fetch("/api/blog-posts/approve-all-drafts", {
+          method: "POST",
+          headers: headers(),
+          body: JSON.stringify({ minQuality: 45, reviewedBy: "ops-ui" }),
+        });
+        const data = await res.json();
+        setStatus(data.message || data.error || "done");
+        await loadDrafts();
+      };
+
+      loadDrafts().catch((e) => setStatus(String(e)));
+    </script>
+  </body>
+</html>

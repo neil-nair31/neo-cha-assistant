@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Neo HS Finder — India CTH / ITC-HS 8-digit finder</title>
+  <meta name="description" content="Most likely India Customs Tariff (CTH / ITC-HS) 8-digit recommendation for import & export. Educational — confirm with Neo CHA / ICEGATE." />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap');
+
+    :root {
+      --ink: #12141a;
+      --muted: #5a6170;
+      --line: #e3e6ee;
+      --canvas: #f3f4f8;
+      --panel: #ffffff;
+      --navy: #1e2a5a;
+      --navy-2: #303392;
+      --accent: #c8102e;
+      --mint: #0d7a5f;
+      --amber: #9a6b12;
+      --soft: #eef0f8;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, #dce3ff 0%, transparent 55%),
+        radial-gradient(900px 400px at 100% 0%, #ffe4e8 0%, transparent 45%),
+        var(--canvas);
+      line-height: 1.5;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 28px 18px 64px; }
+
+    .brand {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      margin-bottom: 28px;
+    }
+    .brand-left { display: flex; align-items: center; gap: 12px; }
+    .mark {
+      width: 40px; height: 40px; border-radius: 10px; background: var(--navy);
+      color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 15px;
+      letter-spacing: -0.02em;
+    }
+    .brand h1 {
+      margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.02em;
+    }
+    .brand .sub { font-size: 12px; color: var(--muted); }
+    .pill {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      border: 1px solid var(--line); background: var(--panel); padding: 6px 10px; border-radius: 999px;
+      color: var(--muted);
+    }
+
+    .hero { margin-bottom: 22px; }
+    .hero h2 {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-weight: 400;
+      font-size: clamp(32px, 5vw, 48px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin: 0 0 10px;
+      max-width: 16ch;
+      color: var(--navy);
+    }
+    .hero p { margin: 0; color: var(--muted); font-size: 15.5px; max-width: 54ch; }
+
+    .stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+      margin: 18px 0 22px;
+    }
+    @media (max-width: 640px) { .stats { grid-template-columns: 1fr; } }
+    .stat {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+    }
+    .stat b { display: block; font-size: 20px; letter-spacing: -0.02em; color: var(--navy); }
+    .stat span { font-size: 12px; color: var(--muted); }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 1px 0 rgba(18,20,26,.03);
+    }
+    label { display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: var(--ink); }
+    textarea, input, select {
+      width: 100%; border: 1px solid var(--line); border-radius: 10px;
+      padding: 11px 12px; font: inherit; background: #fff; color: var(--ink);
+      outline: none; transition: border-color .15s;
+    }
+    textarea:focus, input:focus, select:focus { border-color: var(--navy-2); }
+    textarea { min-height: 96px; resize: vertical; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+    @media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    button.primary {
+      background: var(--navy); color: #fff; border: 0; border-radius: 10px;
+      padding: 12px 18px; font: inherit; font-weight: 600; cursor: pointer;
+    }
+    button.primary:hover { background: var(--navy-2); }
+    button.primary:disabled { opacity: .55; cursor: wait; }
+    button.ghost {
+      background: transparent; border: 1px solid var(--line); border-radius: 10px;
+      padding: 12px 14px; font: inherit; font-weight: 600; cursor: pointer; color: var(--ink);
+    }
+
+    .examples { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .chip {
+      border: 1px solid var(--line); background: var(--soft); color: var(--ink);
+      border-radius: 999px; padding: 7px 12px; font-size: 12.5px; cursor: pointer; font-weight: 500;
+    }
+    .chip:hover { border-color: var(--navy-2); color: var(--navy); }
+
+    .warn {
+      margin-top: 14px; font-size: 12.5px; color: #6b5318;
+      background: #fff7e8; border: 1px solid #f0d7a0; border-radius: 10px; padding: 10px 12px;
+    }
+
+    .results { margin-top: 18px; display: grid; gap: 10px; }
+    .meta-row {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      font-size: 12.5px; color: var(--muted); margin-bottom: 4px;
+    }
+    .badge {
+      font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 999px;
+    }
+    .badge.ai { background: #e8f0ff; color: var(--navy-2); }
+    .badge.lex { background: #eceef3; color: var(--muted); }
+    .badge.high { background: #e7f6f0; color: var(--mint); }
+    .badge.med { background: #fff3dc; color: var(--amber); }
+    .badge.low { background: #f1f2f5; color: var(--muted); }
+
+    .card {
+      border: 1px solid var(--line); border-radius: 14px; padding: 14px 15px; background: #fff;
+      display: grid; gap: 6px;
+    }
+    .card.top { border-color: #c8d0f0; background: linear-gradient(180deg, #f7f8ff, #fff); }
+    .code {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--navy);
+      font-variant-numeric: tabular-nums;
+    }
+    .code span { font-size: 13px; font-weight: 500; color: var(--muted); margin-left: 8px; }
+    .desc { font-size: 14.5px; }
+    .path { font-size: 12px; color: var(--muted); }
+    .reason {
+      margin-top: 8px; padding: 12px 14px; border-radius: 12px; background: var(--soft);
+      font-size: 13.5px; color: var(--ink);
+    }
+    .next { margin-top: 8px; padding-left: 18px; font-size: 13px; color: var(--muted); }
+    .empty { color: var(--muted); font-size: 14px; padding: 8px 2px; }
+
+    footer {
+      margin-top: 28px; font-size: 12px; color: var(--muted);
+      display: flex; flex-wrap: wrap; gap: 10px 18px; justify-content: space-between;
+    }
+    footer a { color: var(--navy-2); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <div class="brand-left">
+        <div class="mark">HS</div>
+        <div>
+          <h1>Neo HS Finder</h1>
+          <div class="sub">India CTH / ITC-HS · Neo Logistics CHA desk</div>
+        </div>
+      </div>
+      <div class="pill" id="coveragePill">Loading India index…</div>
+    </div>
+
+    <section class="hero">
+      <h2>Most likely India CTH for your shipment.</h2>
+      <p>
+        Get a definitive India 8-digit Customs Tariff (CTH / ITC-HS) primary recommendation for Bill of Entry / Shipping Bill prep.
+        Confirm on ICEGATE with Neo’s licensed CHA before filing — this tool does not quote live duty.
+      </p>
+    </section>
+
+    <div class="stats" id="stats">
+      <div class="stat"><b>—</b><span>India CTH-8 lines</span></div>
+      <div class="stat"><b>—</b><span>Chapters covered</span></div>
+      <div class="stat"><b>—</b><span>Classification engine</span></div>
+    </div>
+
+    <section class="panel">
+      <label for="description">Describe the goods in plain language</label>
+      <textarea id="description" placeholder="Example: shelled cashew kernels, dried, packed for export"></textarea>
+      <div class="grid2">
+        <div>
+          <label for="material">Material / composition</label>
+          <input id="material" placeholder="e.g. cotton 100%, mild steel, polyethylene" />
+        </div>
+        <div>
+          <label for="form">Form</label>
+          <input id="form" placeholder="e.g. raw, powder, finished article, machine part" />
+        </div>
+      </div>
+      <div class="grid2">
+        <div>
+          <label for="endUse">End use / function</label>
+          <input id="endUse" placeholder="e.g. food export, industrial feedstock, apparel" />
+        </div>
+        <div>
+          <label for="tradeFlow">India trade flow</label>
+          <select id="tradeFlow">
+            <option value="either">Import or export</option>
+            <option value="import">Import (Bill of Entry)</option>
+            <option value="export">Export (Shipping Bill)</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div>
+          <label for="browse">Or browse a chapter</label>
+          <select id="browse">
+            <option value="">Jump to chapter…</option>
+          </select>
+        </div>
+        <div></div>
+      </div>
+      <div class="actions">
+        <button class="primary" id="classifyBtn" type="button">Get most likely India CTH</button>
+        <button class="ghost" id="searchBtn" type="button">Keyword search only</button>
+      </div>
+      <div class="examples" id="examples">
+        <button type="button" class="chip" data-q="cashew kernels" data-flow="export">Cashew kernels</button>
+        <button type="button" class="chip" data-q="white cement clinker" data-flow="import">White cement clinker</button>
+        <button type="button" class="chip" data-q="titanium dioxide" data-flow="import">Titanium dioxide</button>
+        <button type="button" class="chip" data-q="bleached softwood kraft pulp" data-flow="import">Kraft pulp</button>
+        <button type="button" class="chip" data-q="VAE dispersion polymer for paints" data-flow="import">VAE dispersion</button>
+        <button type="button" class="chip" data-q="coco peat" data-flow="export">Coco peat</button>
+        <button type="button" class="chip" data-q="spun pipes made of cast iron" data-flow="export">CI spun pipes</button>
+      </div>
+      <div class="warn">
+        <strong>Educational — not a Bill of Entry / Shipping Bill.</strong>
+        Results show a most-likely India CTH / ITC-HS <em>8-digit</em> recommendation plus close alternatives. No live BCD/IGST.
+        Confirm on ICEGATE / CBIC / DGFT with Neo’s licensed CHA before filing.
+      </div>
+    </section>
+
+    <section class="results" id="out">
+      <div class="empty">Enter a description and hit Classify — results appear here.</div>
+    </section>
+
+    <footer>
+      <div>Neo HS Finder · Pragma Flow Feature 2 · Separate from Neo Assist chat</div>
+      <div>
+        <a href="/api/health">API</a> ·
+        CHA help: customercare@neologistics.org · docschennai@neologistics.org
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const API = "/api";
+    const out = document.getElementById("out");
+    const desc = document.getElementById("description");
+    const material = document.getElementById("material");
+    const form = document.getElementById("form");
+    const endUse = document.getElementById("endUse");
+    const tradeFlow = document.getElementById("tradeFlow");
+    const browse = document.getElementById("browse");
+
+    function esc(s) {
+      return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    async function boot() {
+      try {
+        const h = await fetch(API + "/health").then((r) => r.json());
+        const lines = h.cth8 || h.subheadings;
+        document.getElementById("coveragePill").textContent =
+          (lines?.toLocaleString?.() || lines) + " India CTH-8 lines";
+        const stats = document.getElementById("stats");
+        stats.innerHTML = `
+          <div class="stat"><b>${Number(lines).toLocaleString()}</b><span>India CTH-8 lines</span></div>
+          <div class="stat"><b>${h.chapters}</b><span>Chapters covered</span></div>
+          <div class="stat"><b>${h.aiEnabled ? "Hybrid AI" : "Lexical"}</b><span>India ranking engine</span></div>`;
+        const ch = await fetch(API + "/chapters").then((r) => r.json());
+        for (const c of ch.chapters || []) {
+          const opt = document.createElement("option");
+          opt.value = c.code;
+          opt.textContent = `${c.code} — ${c.description}`.slice(0, 72);
+          browse.appendChild(opt);
+        }
+      } catch {
+        document.getElementById("coveragePill").textContent = "API offline";
+      }
+    }
+
+    let lastPayload = null;
+
+    function renderHits(payload, mode) {
+      lastPayload = payload;
+      const primary = payload.primary || null;
+      const alts = payload.alternates || [];
+      const results = primary
+        ? [primary, ...alts]
+        : (payload.candidates || payload.results || payload.entries || []);
+      if (!results.length && !primary) {
+        out.innerHTML = `<div class="panel"><div class="empty">No strong match yet. Add material, form, and end-use — or browse chapters.</div>
+          <p class="path">${esc(payload.disclaimer || "")}</p></div>`;
+        return;
+      }
+      const engine =
+        payload.engine === "hybrid-ai" ? "badge ai" :
+        payload.engine === "neo-desk" ? "badge high" : "badge lex";
+      const engineLabel =
+        payload.engine === "hybrid-ai" ? "AI + desk" :
+        payload.engine === "neo-desk" ? "Neo desk precedent" :
+        mode === "chapter" ? "Chapter browse" : "Lexical";
+      let html = `<div class="meta-row"><span class="${engine}">${engineLabel}</span>
+        <span>${primary ? "Primary recommendation" : results.length + " India CTH lines"}</span></div>`;
+      if (payload.deskVerdictLabel) {
+        html += `<div class="warn" style="margin-bottom:12px"><strong>${esc(payload.deskVerdictLabel)}</strong></div>`;
+      }
+      if (payload.ambiguity?.ambiguous) {
+        html += `<div class="warn" style="margin-bottom:12px"><strong>Ambiguous — don’t file on the primary code alone.</strong> ${esc(payload.ambiguity.message)}
+          <ul style="margin:8px 0 0;padding-left:18px">${(payload.ambiguity.reasons||[]).map(r=>`<li>${esc(r)}</li>`).join("")}</ul></div>`;
+      }
+      if (primary) {
+        html += `<article class="card top">
+          <div class="path" style="font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy-2);margin-bottom:6px">${esc(primary.label || "Most likely India CTH")}</div>
+          ${payload.neoDeskPrecedent ? `<div class="path" style="background:#ecfdf5;border:1px solid #a7f3d0;padding:8px 10px;border-radius:8px;margin-bottom:8px">Matches Neo filed line: <b>${esc(payload.neoDeskPrecedent.goods)}</b> · ${esc(payload.neoDeskPrecedent.tradeFlow)} · ${esc((payload.neoDeskPrecedent.ports||[]).join(" / "))} · ${esc(payload.neoDeskPrecedent.dotted)}</div>` : ""}
+          <div class="code">${esc(primary.dotted || primary.code)}
+            <span>HS-6 ${esc(primary.hs6 || "")}</span>
+            <span class="badge high" style="margin-left:8px">${esc(primary.confidence || "high")}</span>
+          </div>
+          <div class="desc">${esc(primary.description)}</div>
+          <div class="path"><b>Why this code:</b> ${esc(primary.why || "")}</div>
+          ${(primary.whatWouldChange||[]).length ? `<div class="path"><b>What would change this:</b><ul style="margin:6px 0 0;padding-left:18px">${primary.whatWouldChange.map(w=>`<li>${esc(w)}</li>`).join("")}</ul></div>` : ""}
+        </article>`;
+        if (alts.length) {
+          html += `<div class="meta-row" style="margin-top:8px"><strong>Close alternatives</strong></div>`;
+          html += alts.map((r) => {
+            const conf = r.confidence || "medium";
+            const confClass = conf === "high" ? "high" : conf === "medium" || conf === "med" ? "med" : "low";
+            return `<article class="card">
+              <div class="code">${esc(r.dotted || r.code)}
+                <span class="badge ${confClass}" style="margin-left:8px">${esc(conf)}</span>
+              </div>
+              <div class="desc">${esc(r.description)}</div>
+            </article>`;
+          }).join("");
+        }
+      } else {
+        if (payload.reasoning) html += `<div class="reason">${esc(payload.reasoning)}</div>`;
+        html += results.map((r, i) => {
+          const conf = r.confidence || (i === 0 ? "high" : "med");
+          const confClass = conf === "high" ? "high" : conf === "medium" || conf === "med" ? "med" : "low";
+          return `<article class="card ${i === 0 ? "top" : ""}">
+            <div class="code">${esc(r.dotted || r.code)}
+              <span class="badge ${confClass}" style="margin-left:8px">${esc(conf)}</span>
+            </div>
+            <div class="desc">${esc(r.description)}</div>
+          </article>`;
+        }).join("");
+      }
+      if (payload.reasoning && primary) html += `<div class="reason">${esc(payload.reasoning)}</div>`;
+      if (payload.compare?.length > 1) {
+        html += `<div class="meta-row" style="margin-top:8px"><strong>How they differ</strong></div>`;
+        html += payload.compare.map((c) => `<article class="card">
+          <div class="code">${esc(c.dotted)} <span>HS-6 ${esc(c.hs6)}</span>
+            <span class="badge med" style="margin-left:8px">${esc(c.confidence)}</span></div>
+          <div class="desc">${esc(c.description)}</div>
+          <div class="path"><b>Why:</b> ${esc(c.whyItMightFit)}<br/><b>Differs:</b> ${esc(c.howItDiffers)}</div>
+        </article>`).join("");
+      }
+      const qs = payload.chaQuestions || payload.nextQuestions || [];
+      if (qs.length) {
+        html += `<ul class="next">${qs.map((q) => `<li>${esc(q)}</li>`).join("")}</ul>`;
+      }
+      html += `<div class="panel" style="margin-top:14px">
+        <label>Send primary CTH to Neo CHA</label>
+        <div class="grid2">
+          <input id="hoName" placeholder="Name *" />
+          <input id="hoEmail" placeholder="Email *" type="email" />
+        </div>
+        <div class="grid2" style="margin-top:8px">
+          <input id="hoPhone" placeholder="Phone" />
+          <input id="hoCompany" placeholder="Company" />
+        </div>
+        <textarea id="hoNotes" style="margin-top:8px;min-height:64px" placeholder="Notes for CHA (invoice refs, specs)"></textarea>
+        <label style="display:flex;gap:8px;align-items:flex-start;margin-top:10px;font-weight:500">
+          <input type="checkbox" id="hoConsent" style="width:auto;margin-top:3px" />
+          <span>I agree Neo may contact me. Recommendation is educational only — CHA confirms before filing.</span>
+        </label>
+        <div class="actions"><button class="primary" type="button" id="hoSend">Email primary CTH to Neo CHA</button></div>
+        <p class="path" id="hoMsg"></p>
+      </div>`;
+      if (payload.disclaimer) {
+        html += `<p class="path" style="margin-top:10px">${esc(payload.disclaimer)}</p>`;
+      }
+      if (payload.indiaNote) {
+        html += `<p class="path">${esc(payload.indiaNote)}</p>`;
+      }
+      if (payload.dutyNote) {
+        html += `<p class="path">${esc(payload.dutyNote)}</p>`;
+      }
+      out.innerHTML = html;
+      document.getElementById("hoSend")?.addEventListener("click", sendHandoff);
+    }
+
+    async function sendHandoff() {
+      if (!lastPayload) return;
+      const results = lastPayload.candidates || lastPayload.results || [];
+      const msg = document.getElementById("hoMsg");
+      if (!document.getElementById("hoConsent")?.checked) {
+        msg.textContent = "Please accept the consent checkbox.";
+        return;
+      }
+      msg.textContent = "Sending…";
+      try {
+        const res = await fetch(API + "/cha-handoff", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: document.getElementById("hoName").value.trim(),
+            email: document.getElementById("hoEmail").value.trim(),
+            phone: document.getElementById("hoPhone").value.trim() || undefined,
+            company: document.getElementById("hoCompany").value.trim() || undefined,
+            tradeFlow: tradeFlow.value || "either",
+            description: desc.value.trim(),
+            notes: document.getElementById("hoNotes").value.trim() || undefined,
+            consent: true,
+            candidates: results.slice(0, 5).map((r) => ({
+              code: r.code,
+              dotted: r.dotted,
+              description: r.description,
+            })),
+          }),
+        });
+        const data = await res.json();
+        msg.textContent = res.ok ? (data.message || "Sent.") : (data.error || "Failed");
+      } catch {
+        msg.textContent = "Handoff failed — is the API running?";
+      }
+    }
+
+    async function classify() {
+      const description = desc.value.trim();
+      if (description.length < 2) return;
+      document.getElementById("classifyBtn").disabled = true;
+      out.innerHTML = `<div class="empty">Classifying against India CTH index…</div>`;
+      try {
+        const res = await fetch(API + "/classify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            description,
+            material: material.value.trim() || undefined,
+            form: form.value.trim() || undefined,
+            endUse: endUse.value.trim() || undefined,
+            tradeFlow: tradeFlow.value || "either",
+          }),
+        });
+        renderHits(await res.json(), "classify");
+      } catch (e) {
+        out.innerHTML = `<div class="empty">Request failed — is Neo HS Finder running on this port?</div>`;
+      } finally {
+        document.getElementById("classifyBtn").disabled = false;
+      }
+    }
+
+    async function searchOnly() {
+      const q = desc.value.trim();
+      if (q.length < 2) return;
+      out.innerHTML = `<div class="empty">Searching…</div>`;
+      const res = await fetch(API + "/search?q=" + encodeURIComponent(q) + "&limit=15");
+      renderHits(await res.json(), "search");
+    }
+
+    document.getElementById("examples").addEventListener("click", (e) => {
+      const t = e.target.closest("[data-q]");
+      if (!t) return;
+      desc.value = t.getAttribute("data-q");
+      const flow = t.getAttribute("data-flow");
+      if (flow) tradeFlow.value = flow;
+    });
+
+    browse.addEventListener("change", async () => {
+      if (!browse.value) return;
+      out.innerHTML = `<div class="empty">Loading chapter ${browse.value}…</div>`;
+      const res = await fetch(API + "/chapter/" + browse.value);
+      const data = await res.json();
+      renderHits({ entries: (data.entries || []).slice(0, 40), disclaimer: data.disclaimer }, "chapter");
+    });
+
+    document.getElementById("classifyBtn").onclick = classify;
+    document.getElementById("searchBtn").onclick = searchOnly;
+    desc.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") classify();
+    });
+
+    boot();
+  </script>
+</body>
+</html>

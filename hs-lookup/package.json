@@ -1,0 +1,37 @@
+{
+  "name": "@neo-cha/hs-lookup",
+  "version": "3.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Neo HS Finder — India CTH / ITC-HS 8-digit tariff finder (Pragma Flow Feature 2)",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build-index": "tsx src/build-index.ts",
+    "refresh-india": "tsx src/refresh-india-data.ts",
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "smoke": "tsx src/smoke.ts",
+    "audit": "tsx src/site-audit.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "nodemailer": "^6.10.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.10.2",
+    "@types/nodemailer": "^6.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

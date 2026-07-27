@@ -1,0 +1,42 @@
+{
+  "name": "neo-cha-assistant",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Neo Logistics AI Customs & Shipment Assistant — native CHA chatbot with RAG, lead capture, and DPDP compliance",
+  "workspaces": [
+    "server",
+    "widget",
+    "hs-lookup",
+    "notifications-digest",
+    "client-portal"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w server",
+    "dev:widget": "npm run dev -w widget",
+    "build": "npm run build -w widget && npm run build -w server",
+    "start": "npm run start -w server",
+    "ingest": "npm run ingest -w server",
+    "sync-kb": "npm run sync-kb -w server",
+    "retention": "npm run retention -w server",
+    "smoke": "npm run smoke -w server",
+    "dev:hs": "npm run dev -w @neo-cha/hs-lookup",
+    "build:hs-index": "npm run build-index -w @neo-cha/hs-lookup",
+    "smoke:hs": "npm run smoke -w @neo-cha/hs-lookup",
+    "audit:hs": "npm run audit -w @neo-cha/hs-lookup",
+    "refresh:hs": "npm run refresh-india -w @neo-cha/hs-lookup",
+    "dev:notifications": "npm run dev -w @neo-cha/notifications-digest",
+    "scan:notifications": "npm run scan -w @neo-cha/notifications-digest",
+    "machine:notifications": "npm run machine -w @neo-cha/notifications-digest",
+    "resummarize:notifications": "npm run resummarize -w @neo-cha/notifications-digest",
+    "approve:notifications": "npm run approve -w @neo-cha/notifications-digest",
+    "smoke:notifications": "npm run smoke -w @neo-cha/notifications-digest",
+    "send:digest": "npm run send-digest -w @neo-cha/notifications-digest",
+    "dev:portal": "npm run dev -w @neo-cha/client-portal",
+    "dev:portal-web": "npm run dev:web -w @neo-cha/client-portal",
+    "smoke:portal": "npm run smoke -w @neo-cha/client-portal",
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w widget && npm run typecheck -w @neo-cha/hs-lookup && npm run typecheck -w @neo-cha/notifications-digest && npm run typecheck -w @neo-cha/client-portal"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
