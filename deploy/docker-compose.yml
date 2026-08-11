@@ -1,0 +1,70 @@
+# Neo Pragma Flow — always-on client demo stack
+# Usage: see docs/CLIENT-DEMO-HOSTING.md
+
+services:
+  assist:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.assist
+    env_file: ../.env
+    environment:
+      NODE_ENV: production
+      PORT: "8787"
+      CORS_ORIGIN: ${PUBLIC_ORIGIN:-*}
+      DATABASE_PATH: /data/neo-assistant.sqlite
+    volumes:
+      - assist-data:/data
+    restart: unless-stopped
+
+  hs:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.hs
+    env_file: ../.env
+    environment:
+      NODE_ENV: production
+      HS_LOOKUP_PORT: "8790"
+      CORS_ORIGIN: ${PUBLIC_ORIGIN:-*}
+    restart: unless-stopped
+
+  digest:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.digest
+    env_file: ../.env
+    environment:
+      NODE_ENV: production
+      NOTIFICATIONS_DIGEST_PORT: "8791"
+      CORS_ORIGIN: ${PUBLIC_ORIGIN:-*}
+    volumes:
+      - digest-data:/app/notifications-digest/data
+    restart: unless-stopped
+
+  portal:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.portal
+    env_file: ../.env
+    environment:
+      NODE_ENV: production
+      PORTAL_PORT: "8792"
+      CORS_ORIGIN: ${PUBLIC_ORIGIN:-*}
+    restart: unless-stopped
+
+  gateway:
+    image: nginx:1.27-alpine
+    depends_on:
+      - assist
+      - hs
+      - digest
+      - portal
+    ports:
+      - "${HTTP_PORT:-80}:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./site-dist:/usr/share/nginx/html:ro
+    restart: unless-stopped
+
+volumes:
+  assist-data:
+  digest-data:

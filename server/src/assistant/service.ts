@@ -149,6 +149,7 @@ function getLatestLead(conversationId: string): LeadFields | undefined {
 export function recordConsent(input: {
   conversationId: string;
   ip?: string;
+  lead?: Pick<LeadFields, "name" | "company" | "email" | "phone">;
 }) {
   const id = nanoid();
   getDb()
@@ -158,7 +159,29 @@ export function recordConsent(input: {
     )
     .run(id, input.conversationId, CONSENT_VERSION, consentNoticeText(), now(), input.ip ?? null);
   track("consent_granted", input.conversationId);
-  return { consentId: id, version: CONSENT_VERSION, text: consentNoticeText() };
+
+  let leadId: string | undefined;
+  const lead = input.lead;
+  const hasContact =
+    Boolean(lead?.email?.trim()) || Boolean(lead?.phone?.trim()) || Boolean(lead?.name?.trim());
+  if (lead && hasContact) {
+    leadId = persistLead({
+      conversationId: input.conversationId,
+      lead: { ...lead, intentType: "callback" },
+      isHuge: false,
+      consentId: id,
+    });
+    void notifyLead({
+      leadId,
+      intentType: "callback",
+      isHuge: false,
+      escalate: true,
+      lead: { ...lead, intentType: "callback" },
+      conversationExcerpt: `Consent + callback form for conversation ${input.conversationId}`,
+    });
+  }
+
+  return { consentId: id, version: CONSENT_VERSION, text: consentNoticeText(), leadId };
 }
 
 function persistLead(input: {

@@ -95,6 +95,10 @@ router.post("/consent", (req, res) => {
     conversationId: z.string().min(1),
     accepted: z.literal(true),
     sessionId: z.string().min(8),
+    name: z.string().max(120).optional(),
+    company: z.string().max(160).optional(),
+    email: z.union([z.string().email(), z.literal("")]).optional(),
+    phone: z.string().max(32).optional(),
   });
   const parsed = schema.safeParse(req.body);
   if (!parsed.success) {
@@ -109,9 +113,18 @@ router.post("/consent", (req, res) => {
     userAgent: req.get("user-agent") ?? undefined,
   });
 
+  const email = parsed.data.email?.trim() || undefined;
+  const phone = parsed.data.phone?.trim() || undefined;
+  const name = parsed.data.name?.trim() || undefined;
+  const company = parsed.data.company?.trim() || undefined;
+
   const result = recordConsent({
     conversationId: parsed.data.conversationId,
     ip: req.ip,
+    lead:
+      email || phone || name || company
+        ? { name, company, email, phone }
+        : undefined,
   });
   res.json({ ok: true, ...result });
 });

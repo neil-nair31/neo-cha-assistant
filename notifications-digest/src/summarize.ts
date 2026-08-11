@@ -43,6 +43,12 @@ function scorePost(post: Omit<BlogPost, "qualityScore">): number {
   if (/\b(new dgft|new cbic|important update|what you need to know)\b/i.test(post.title)) score -= 25;
   if (/download|type\s*:\s*pdf/i.test(post.title)) score -= 40;
   if (!/##\s+/m.test(post.body)) score -= 8;
+  // Penalize ChatGPT filler in body / excerpt / impact
+  const blob = `${post.title}\n${post.excerpt}\n${post.body}\n${post.impact}`;
+  const filler =
+    /\b(learn about|streamline|aren't fully detailed|it's advisable|in today's (?:dynamic )?trade landscape|it is important to note|stakeholders|leverage|delve|comprehensive|robust|stay ahead|navigate the complexities|game.?changer|unlock the potential)\b/i;
+  if (filler.test(blob)) score -= 28;
+  if (/\b(as an ai|as a language model|hope this helps)\b/i.test(blob)) score -= 40;
   return Math.max(0, Math.min(100, score));
 }
 
@@ -145,7 +151,7 @@ Sound like a sharp ops manager briefing a client over chai — not ChatGPT, not 
 VOICE
 - Specific. Named goods / processes when the notice allows it.
 - Calm confidence. Short paragraphs. One idea per paragraph.
-- Ban filler: "In today's dynamic trade landscape", "It is important to note", "stakeholders", "leverage", "delve", "comprehensive", "robust", "stay ahead".
+- Ban filler: "In today's dynamic trade landscape", "It is important to note", "stakeholders", "leverage", "delve", "comprehensive", "robust", "stay ahead", "Learn about", "streamline", "aren't fully detailed", "It's advisable", "navigate the complexities", "game-changer".
 - Ban title starters: "New…", "Important…", "Latest…", "What You Need to Know".
 - Title = business headline a CFO would open (max ~90 chars).
 

@@ -10,6 +10,7 @@
     "scan": "tsx src/scan.ts",
     "machine": "tsx src/machine.ts",
     "resummarize": "tsx src/resummarize.ts",
+    "rescore-filler": "tsx src/rescore-filler.ts",
     "approve": "tsx src/approve.ts",
     "smoke": "tsx src/smoke.ts",
     "send-digest": "tsx src/send-digest.ts",

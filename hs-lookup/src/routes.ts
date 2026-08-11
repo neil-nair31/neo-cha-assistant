@@ -197,7 +197,7 @@ router.post("/cha-handoff", handoffLimiter, async (req, res) => {
       leadId,
       message: notify.emailed
         ? "Shortlist sent to Neo’s CHA desk. We’ll confirm before you file."
-        : "Request logged. Neo’s CHA desk will receive it when SMTP is configured (or check server console in dev).",
+        : "Logged for Neo CHA desk. For immediate help: customercare@neologistics.org / 0484 2669737 (Cochin) or docschennai@neologistics.org / 044 28419747 (Chennai).",
       emailed: notify.emailed,
       disclaimer: DISCLAIMER,
     });

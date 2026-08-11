@@ -7,8 +7,8 @@
 }
 
 .neo-launcher {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border: 0;
   border-radius: 50%;
   cursor: pointer;
@@ -18,6 +18,33 @@
   display: grid;
   place-items: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  line-height: 1.05;
+}
+
+.neo-launcher-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.neo-launcher-brand {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.neo-launcher-ask {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.92;
+}
+
+.neo-launcher-x {
+  font-size: 1.1rem;
 }
 
 .neo-launcher:hover,
@@ -169,6 +196,29 @@
   color: #7c2d12;
 }
 
+.neo-consent-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  margin-top: 0.65rem;
+}
+
+.neo-consent-fields input {
+  width: 100%;
+  border: 1px solid #fdba74;
+  border-radius: 8px;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.78rem;
+  background: #fff;
+  color: #1c1917;
+}
+
+.neo-consent-hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.7rem;
+  color: #9a3412;
+}
+
 .neo-consent button {
   margin-top: 0.5rem;
   border: 0;
@@ -178,6 +228,33 @@
   color: #fff;
   font-weight: 600;
   cursor: pointer;
+}
+
+.neo-consent button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.neo-desk-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0 1rem 0.55rem;
+}
+
+.neo-desk-cta a {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: #181b4a;
+  background: #eef0fa;
+  border: 1px solid rgba(48, 51, 146, 0.18);
+  border-radius: 999px;
+  padding: 0.28rem 0.55rem;
+}
+
+.neo-desk-cta a:hover {
+  background: #e0e4f5;
 }
 
 .neo-composer {

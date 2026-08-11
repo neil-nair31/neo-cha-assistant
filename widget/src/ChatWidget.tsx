@@ -16,6 +16,9 @@ type PublicConfig = {
   brand: { name: string; company: string; primary: string; accent: string };
 };
 
+const OFFLINE_WELCOME =
+  "Neo Assist is temporarily unavailable. Email customercare@neologistics.org or call Cochin 0484 2669737 / Chennai 044 28419747 — Neo’s CHA desk will help.";
+
 function sessionId(): string {
   const key = "neo_assist_sid";
   let id = localStorage.getItem(key);
@@ -47,6 +50,12 @@ export function ChatWidget({ apiBase }: ChatWidgetProps = {}) {
   const [showConsent, setShowConsent] = useState(false);
   const [consentText, setConsentText] = useState("");
   const [status, setStatus] = useState("");
+  const [showDeskCta, setShowDeskCta] = useState(false);
+  const [leadName, setLeadName] = useState("");
+  const [leadCompany, setLeadCompany] = useState("");
+  const [leadEmail, setLeadEmail] = useState("");
+  const [leadPhone, setLeadPhone] = useState("");
+  const [consentBusy, setConsentBusy] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const sid = useMemo(() => sessionId(), []);
@@ -84,17 +93,17 @@ export function ChatWidget({ apiBase }: ChatWidgetProps = {}) {
           {
             id: "welcome",
             role: "assistant",
-            content:
-              "Hello — I'm Neo Assist. The API isn't reachable yet; start the server to chat.",
+            content: OFFLINE_WELCOME,
           },
         ]);
+        setShowDeskCta(true);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [base]);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, open]);
+  }, [messages, open, showConsent]);
 
   async function send(preset?: string) {
     const text = (preset ?? input).trim();
@@ -137,24 +146,25 @@ export function ChatWidget({ apiBase }: ChatWidgetProps = {}) {
         setShowConsent(true);
         if (data.consent?.text) setConsentText(data.consent.text);
       }
-      if (data.escalate) setStatus("Neo's team has been flagged for follow-up.");
-      if (data.offline) setStatus("Running in fallback mode — leave details for a callback.");
-      // analytics hook (no PII)
+      if (data.escalate || data.needsConsent) setShowDeskCta(true);
+      if (data.escalate) setStatus("Neo’s team has been flagged for follow-up.");
+      if (data.offline) setStatus("Leave your details below — Neo will call you back.");
       window.dispatchEvent(
         new CustomEvent("neo-assist-analytics", {
           detail: { event: "question_asked", conversationId: data.conversationId },
         })
       );
     } catch (e) {
+      setShowDeskCta(true);
       setMessages((m) => [
         ...m,
         {
           id: crypto.randomUUID(),
           role: "assistant",
           content:
-            e instanceof Error
+            e instanceof Error && !/fetch|network|failed to fetch/i.test(e.message)
               ? e.message
-              : "I'm having trouble right now — email customercare@neologistics.org and our team will help.",
+              : "I'm having trouble right now — email customercare@neologistics.org or call 0484 2669737 and our team will help.",
         },
       ]);
     } finally {
@@ -164,6 +174,13 @@ export function ChatWidget({ apiBase }: ChatWidgetProps = {}) {
 
   async function acceptConsent() {
     if (!conversationId) return;
+    const email = leadEmail.trim();
+    const phone = leadPhone.trim();
+    if (!email && !phone) {
+      setStatus("Add an email or phone so Neo can reach you.");
+      return;
+    }
+    setConsentBusy(true);
     try {
       await api("/api/assistant/consent", {
         method: "POST",
@@ -171,9 +188,14 @@ export function ChatWidget({ apiBase }: ChatWidgetProps = {}) {
           conversationId,
           sessionId: sid,
           accepted: true,
+          name: leadName.trim() || undefined,
+          company: leadCompany.trim() || undefined,
+          email: email || undefined,
+          phone: phone || undefined,
         }),
       });
       setShowConsent(false);
+      setShowDeskCta(true);
       setStatus("Thanks — Neo may contact you about this enquiry.");
       window.dispatchEvent(
         new CustomEvent("neo-assist-analytics", {
@@ -181,7 +203,9 @@ export function ChatWidget({ apiBase }: ChatWidgetProps = {}) {
         })
       );
     } catch {
-      setStatus("Could not save consent — please try again.");
+      setStatus("Could not save consent — please try again or call the desk.");
+    } finally {
+      setConsentBusy(false);
     }
   }
 
@@ -249,9 +273,53 @@ export function ChatWidget({ apiBase }: ChatWidgetProps = {}) {
                   Privacy policy
                 </a>
               </div>
-              <button type="button" onClick={acceptConsent}>
-                I agree — Neo may contact me
+              <div className="neo-consent-fields">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={leadName}
+                  onChange={(e) => setLeadName(e.target.value)}
+                  autoComplete="name"
+                  aria-label="Name"
+                />
+                <input
+                  type="text"
+                  placeholder="Company"
+                  value={leadCompany}
+                  onChange={(e) => setLeadCompany(e.target.value)}
+                  autoComplete="organization"
+                  aria-label="Company"
+                />
+                <input
+                  type="email"
+                  placeholder="Email *"
+                  value={leadEmail}
+                  onChange={(e) => setLeadEmail(e.target.value)}
+                  autoComplete="email"
+                  aria-label="Email"
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone *"
+                  value={leadPhone}
+                  onChange={(e) => setLeadPhone(e.target.value)}
+                  autoComplete="tel"
+                  aria-label="Phone"
+                />
+              </div>
+              <p className="neo-consent-hint">Email or phone required.</p>
+              <button type="button" onClick={() => void acceptConsent()} disabled={consentBusy}>
+                {consentBusy ? "Saving…" : "I agree — Neo may contact me"}
               </button>
+            </div>
+          )}
+
+          {showDeskCta && (
+            <div className="neo-desk-cta" role="group" aria-label="Contact Neo desk">
+              <a href="mailto:customercare@neologistics.org">Email Cochin</a>
+              <a href="tel:+914842669737">Call Cochin</a>
+              <a href="mailto:docschennai@neologistics.org">Email Chennai</a>
+              <a href="tel:+914428419747">Call Chennai</a>
             </div>
           )}
 
@@ -291,7 +359,7 @@ export function ChatWidget({ apiBase }: ChatWidgetProps = {}) {
       <button
         type="button"
         className="neo-launcher"
-        aria-label={open ? "Close Neo Assist" : "Open Neo Assist chat"}
+        aria-label={open ? "Close Neo Assist" : "Ask Neo — open chat"}
         aria-expanded={open}
         onClick={() => {
           setOpen((v) => !v);
@@ -302,7 +370,14 @@ export function ChatWidget({ apiBase }: ChatWidgetProps = {}) {
           }
         }}
       >
-        {open ? "✕" : "💬"}
+        {open ? (
+          <span className="neo-launcher-x">✕</span>
+        ) : (
+          <span className="neo-launcher-mark">
+            <span className="neo-launcher-brand">Neo</span>
+            <span className="neo-launcher-ask">Ask</span>
+          </span>
+        )}
       </button>
     </div>
   );

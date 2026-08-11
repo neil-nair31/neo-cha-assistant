@@ -196,32 +196,26 @@ export function buildCompetitorReply(): string {
 export function buildQuoteEnquiryReply(text: string, huge: boolean): string {
   const hints = extractLeadHints(text);
   const lines = [
-    "Thanks — this looks like a **real shipping enquiry**. Neo Logistics (Licensed CHA, Cochin & Chennai) can help with customs clearance, freight coordination, warehousing, and inland transport once the team reviews your documents.",
+    "Thanks — this looks like a **real shipping enquiry**. Neo’s licensed CHA desk (Cochin & Chennai) will review documents before any rate or duty discussion.",
   ];
 
   if (huge) {
     lines.push(
-      "Because of the volume involved, I'm flagging this as a **priority** for Neo's sales / operations team."
+      "Volume looks material — I’m flagging this as a **priority** for Neo’s sales / operations team."
     );
   }
-
-  lines.push(
-    "I can't quote rates or exact duty % in chat. To move fast, please share (or confirm):",
-    "• Commodity & volume",
-    "• Origin & destination port",
-    "• Timeline",
-    "• Company name + contact email or phone",
-    "",
-    "Then accept the **consent notice** so Neo can store your details and call back.",
-    "",
-    "Cochin: customercare@neologistics.org | Chennai: docschennai@neologistics.org"
-  );
 
   if (hints.commodity || hints.volume) {
     lines.unshift(
       `I noted: ${[hints.commodity, hints.volume, hints.origin && hints.destination ? `${hints.origin} → ${hints.destination}` : null].filter(Boolean).join(" · ")}.`
     );
   }
+
+  lines.push(
+    "I can’t quote rates or exact duty % in chat. Use the **contact form below** (name + email or phone) so Neo can call you back — or reach the desk directly:",
+    "• Cochin: customercare@neologistics.org | 0484 2669737",
+    "• Chennai: docschennai@neologistics.org | 044 28419747"
+  );
 
   return lines.join("\n");
 }
