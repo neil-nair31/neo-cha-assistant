@@ -13,7 +13,8 @@ const rootEnv = path.resolve(__dirname, "../../.env");
 dotenv.config({ path: rootEnv });
 dotenv.config();
 
-const port = Number(process.env.HS_LOOKUP_PORT ?? 8790);
+// Railway/Render inject PORT; local/dev can use HS_LOOKUP_PORT
+const port = Number(process.env.PORT || process.env.HS_LOOKUP_PORT || 8790);
 const publicDir = path.resolve(__dirname, "../public");
 
 // Fail fast if index missing
@@ -47,7 +48,7 @@ if (fs.existsSync(publicDir)) {
   });
 }
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   const openAi = Boolean(
     process.env.OPENAI_API_KEY &&
       !process.env.OPENAI_API_KEY.includes("your-key") &&
@@ -55,8 +56,8 @@ app.listen(port, () => {
   );
   const gemini = Boolean(process.env.GEMINI_API_KEY || process.env.GOOGLE_AI_API_KEY);
   const model = process.env.HS_AI_MODEL || process.env.AI_MODEL || "(default)";
-  console.log(`Neo HS Finder → http://localhost:${port}`);
-  console.log(`API health    → http://localhost:${port}/api/health`);
+  console.log(`Neo HS Finder → http://0.0.0.0:${port}`);
+  console.log(`API health    → http://0.0.0.0:${port}/api/health`);
   console.log(
     `AI rerank     → ${
       openAi

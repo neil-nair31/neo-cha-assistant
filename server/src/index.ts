@@ -53,7 +53,7 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
   res.status(500).json({ error: "internal_error" });
 });
 
-app.listen(config.port, () => {
-  console.log(`Neo CHA Assistant listening on http://localhost:${config.port}`);
+app.listen(config.port, "0.0.0.0", () => {
+  console.log(`Neo CHA Assistant listening on http://0.0.0.0:${config.port}`);
   console.log(`Embed drop-in: ${config.port}/widget/neo-assist.js + neo-assist.css`);
 });

@@ -14,7 +14,8 @@ const rootEnv = path.resolve(__dirname, "../../.env");
 dotenv.config({ path: rootEnv });
 dotenv.config();
 
-const port = Number(process.env.NOTIFICATIONS_DIGEST_PORT ?? 8791);
+// Railway/Render inject PORT; local/dev can use NOTIFICATIONS_DIGEST_PORT
+const port = Number(process.env.PORT || process.env.NOTIFICATIONS_DIGEST_PORT || 8791);
 const publicDir = path.resolve(__dirname, "../public");
 
 try {
@@ -50,10 +51,10 @@ if (fs.existsSync(publicDir)) {
   });
 }
 
-app.listen(port, () => {
-  console.log(`AI Customs Notifications Digest → http://localhost:${port}`);
-  console.log(`Blog API (published)            → http://localhost:${port}/api/blog-posts`);
-  console.log(`Ops review gate                 → http://localhost:${port}/ops`);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`AI Customs Notifications Digest → http://0.0.0.0:${port}`);
+  console.log(`Blog API (published)            → http://0.0.0.0:${port}/api/blog-posts`);
+  console.log(`Ops review gate                 → http://0.0.0.0:${port}/ops`);
   console.log(`Content machine (manual)        → npm run machine:notifications`);
   startContentMachineScheduler();
 });

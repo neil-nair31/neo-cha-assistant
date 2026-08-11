@@ -11,7 +11,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const app = express();
-const port = Number(process.env.PORTAL_PORT || 8792);
+// Railway/Render inject PORT; local/dev can use PORTAL_PORT
+const port = Number(process.env.PORT || process.env.PORTAL_PORT || 8792);
 
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(
@@ -40,10 +41,10 @@ app.get("/app/*", (_req, res) => {
   });
 });
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   const db = getDb();
-  console.log(`Neo Client Portal API http://localhost:${port}`);
-  console.log(`  API  http://localhost:${port}/api/health`);
-  console.log(`  UI   http://localhost:${port}/app/  (after build) or Vite :5175`);
+  console.log(`Neo Client Portal API http://0.0.0.0:${port}`);
+  console.log(`  API  http://0.0.0.0:${port}/api/health`);
+  console.log(`  UI   http://0.0.0.0:${port}/app/  (after build) or Vite :5175`);
   console.log(`  Seed ${db.shipments.length} shipments · ${db.clients.length} demo clients`);
 });
