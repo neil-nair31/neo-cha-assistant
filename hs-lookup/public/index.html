@@ -108,6 +108,21 @@
       padding: 12px 14px; font: inherit; font-weight: 600; cursor: pointer; color: var(--ink);
     }
 
+    .desk-box {
+      margin-bottom: 16px;
+      padding: 14px 14px 12px;
+      border-radius: 12px;
+      border: 1px solid #c8d0f0;
+      background: linear-gradient(180deg, #f4f6ff 0%, #fff 100%);
+    }
+    .desk-box .hint {
+      font-size: 12px; color: var(--muted); margin: 0 0 10px; font-weight: 500;
+    }
+    .desk-box label { color: var(--navy); font-size: 13px; }
+    .desk-meta {
+      margin-top: 8px; font-size: 12.5px; color: var(--muted); min-height: 1.2em;
+    }
+    .desk-meta strong { color: var(--mint); }
     .examples { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
     .chip {
       border: 1px solid var(--line); background: var(--soft); color: var(--ink);
@@ -189,8 +204,20 @@
     </div>
 
     <section class="panel">
+      <div class="desk-box">
+        <label for="neoDesk">Neo desk certified cargos (25)</label>
+        <p class="hint">
+          Select a goods line from Neo Logistics’ filed Cochin / Chennai workbook.
+          Description and trade flow fill in automatically — then we match India CTH.
+        </p>
+        <select id="neoDesk">
+          <option value="">Choose a Neo certified line…</option>
+        </select>
+        <div class="desk-meta" id="neoDeskMeta"></div>
+      </div>
+
       <label for="description">Describe the goods in plain language</label>
-      <textarea id="description" placeholder="Example: shelled cashew kernels, dried, packed for export"></textarea>
+      <textarea id="description" placeholder="Example: shelled cashew kernels, dried, packed for export — or pick from Neo desk list above"></textarea>
       <div class="grid2">
         <div>
           <label for="material">Material / composition</label>
@@ -266,6 +293,10 @@
     const endUse = document.getElementById("endUse");
     const tradeFlow = document.getElementById("tradeFlow");
     const browse = document.getElementById("browse");
+    const neoDesk = document.getElementById("neoDesk");
+    const neoDeskMeta = document.getElementById("neoDeskMeta");
+    /** @type {Record<string, {goods:string,code:string,dotted:string,tradeFlow:string,ports:string[],sl:number}>} */
+    let deskBySl = {};
 
     function esc(s) {
       return String(s ?? "").replace(/[&<>"']/g, (c) => ({
@@ -273,17 +304,83 @@
       }[c]));
     }
 
+    function formatDeskLabel(line) {
+      const flow = (line.tradeFlow || "").toUpperCase();
+      const ports = (line.ports || []).join("/");
+      const cth = line.dotted || line.code;
+      return `${String(line.sl).padStart(2, "0")}. ${line.goods} · ${flow} · CTH ${cth}${ports ? " · " + ports : ""}`;
+    }
+
+    async function loadNeoDesk() {
+      const data = await fetch(API + "/neo-desk").then((r) => r.json());
+      const lines = data.lines || [];
+      deskBySl = {};
+      // Keep default option; rebuild the rest
+      neoDesk.innerHTML = `<option value="">Choose a Neo certified line…</option>`;
+      // Group: imports then exports for readability
+      const imports = lines.filter((l) => l.tradeFlow === "import");
+      const exports = lines.filter((l) => l.tradeFlow === "export");
+      const other = lines.filter((l) => l.tradeFlow !== "import" && l.tradeFlow !== "export");
+
+      function addGroup(label, rows) {
+        if (!rows.length) return;
+        const g = document.createElement("optgroup");
+        g.label = label;
+        for (const line of rows) {
+          deskBySl[String(line.sl)] = line;
+          const opt = document.createElement("option");
+          opt.value = String(line.sl);
+          opt.textContent = formatDeskLabel(line);
+          g.appendChild(opt);
+        }
+        neoDesk.appendChild(g);
+      }
+
+      addGroup(`Import — Bill of Entry (${imports.length})`, imports);
+      addGroup(`Export — Shipping Bill (${exports.length})`, exports);
+      addGroup("Other", other);
+
+      if (lines.length) {
+        neoDeskMeta.textContent = `${lines.length} lines certified from Neo desk workbook (Cochin / Chennai filings).`;
+      }
+      return lines.length;
+    }
+
+    function applyNeoDeskSelection(runClassify) {
+      const line = deskBySl[neoDesk.value];
+      if (!line) {
+        neoDeskMeta.textContent = Object.keys(deskBySl).length
+          ? `${Object.keys(deskBySl).length} lines certified from Neo desk workbook (Cochin / Chennai filings).`
+          : "";
+        return;
+      }
+      desc.value = line.goods;
+      if (line.tradeFlow === "import" || line.tradeFlow === "export") {
+        tradeFlow.value = line.tradeFlow;
+      }
+      material.value = "";
+      form.value = "";
+      endUse.value = "";
+      neoDeskMeta.innerHTML =
+        `Neo desk CTH <strong>${esc(line.dotted || line.code)}</strong> · ` +
+        `${esc((line.tradeFlow || "").toUpperCase())} · ` +
+        `${esc((line.ports || []).join(" / ") || "COCHIN / CHENNAI")} · educational pin only`;
+      if (runClassify) classify();
+    }
+
     async function boot() {
       try {
         const h = await fetch(API + "/health").then((r) => r.json());
         const lines = h.cth8 || h.subheadings;
+        const deskCount = h.neoDeskPrecedents || 25;
         document.getElementById("coveragePill").textContent =
           (lines?.toLocaleString?.() || lines) + " India CTH-8 lines";
         const stats = document.getElementById("stats");
         stats.innerHTML = `
           <div class="stat"><b>${Number(lines).toLocaleString()}</b><span>India CTH-8 lines</span></div>
-          <div class="stat"><b>${h.chapters}</b><span>Chapters covered</span></div>
+          <div class="stat"><b>${deskCount}</b><span>Neo desk certified lines</span></div>
           <div class="stat"><b>${h.aiEnabled ? "Hybrid AI" : "Lexical"}</b><span>India ranking engine</span></div>`;
+        await loadNeoDesk();
         const ch = await fetch(API + "/chapters").then((r) => r.json());
         for (const c of ch.chapters || []) {
           const opt = document.createElement("option");
@@ -293,6 +390,7 @@
         }
       } catch {
         document.getElementById("coveragePill").textContent = "API offline";
+        neoDeskMeta.textContent = "Could not load Neo desk list — API offline.";
       }
     }
 
@@ -478,12 +576,21 @@
       renderHits(await res.json(), "search");
     }
 
+    neoDesk.addEventListener("change", () => applyNeoDeskSelection(true));
+
     document.getElementById("examples").addEventListener("click", (e) => {
       const t = e.target.closest("[data-q]");
       if (!t) return;
       desc.value = t.getAttribute("data-q");
       const flow = t.getAttribute("data-flow");
       if (flow) tradeFlow.value = flow;
+      // Clear desk dropdown when using free chips (free-text path)
+      if (neoDesk.value) {
+        neoDesk.value = "";
+        neoDeskMeta.textContent = Object.keys(deskBySl).length
+          ? `${Object.keys(deskBySl).length} lines certified from Neo desk workbook (Cochin / Chennai filings).`
+          : "";
+      }
     });
 
     browse.addEventListener("change", async () => {
