@@ -32,6 +32,8 @@ app.get("/api/health", (_req, res) => res.json({ ok: true, feature: "assistant" 
 app.use("/api/assistant", assistantRoutes);
 
 if (fs.existsSync(config.widgetDir)) {
+  // Demo UI assets (/assets/*) + drop-in embed paths (/widget/neo-assist.*)
+  app.use(express.static(config.widgetDir));
   app.use("/widget", express.static(config.widgetDir));
   app.get("/", (_req, res) => {
     res.sendFile(path.join(config.widgetDir, "index.html"));

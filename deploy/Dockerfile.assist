@@ -4,7 +4,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
-# Install workspace deps (need root package + server lock context)
 COPY package.json package-lock.json ./
 COPY server/package.json ./server/
 COPY widget/package.json ./widget/
@@ -12,19 +11,18 @@ COPY hs-lookup/package.json ./hs-lookup/
 COPY notifications-digest/package.json ./notifications-digest/
 COPY client-portal/package.json ./client-portal/
 COPY client-portal/web/package.json ./client-portal/web/
-RUN npm ci --workspace=server --include-workspace-root=false 2>/dev/null || npm ci
+RUN npm ci
 
 COPY server ./server
 COPY knowledge ./knowledge
 COPY widget ./widget
 
-WORKDIR /app/server
-RUN npm run build || npx tsc
-# Rebuild native deps for this image
-WORKDIR /app
-RUN npm rebuild better-sqlite3 || true
+RUN npm run build -w widget \
+ && npm run build -w @neo-cha/server \
+ && npm rebuild better-sqlite3 || true
 
-WORKDIR /app
 ENV NODE_ENV=production
+ENV PORT=8787
 EXPOSE 8787
-CMD ["node", "server/dist/index.js"]
+WORKDIR /app
+CMD ["npm", "run", "start", "-w", "@neo-cha/server"]

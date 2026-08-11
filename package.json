@@ -13,8 +13,9 @@
   "scripts": {
     "dev": "npm run dev -w server",
     "dev:widget": "npm run dev -w widget",
-    "build": "npm run build -w widget && npm run build -w server",
-    "start": "npm run start -w server",
+    "build": "npm run build -w widget && npm run build -w @neo-cha/server",
+    "start": "npm run start -w @neo-cha/server",
+    "build:assist": "npm run build -w widget && npm run build -w @neo-cha/server",
     "ingest": "npm run ingest -w server",
     "sync-kb": "npm run sync-kb -w server",
     "retention": "npm run retention -w server",
