@@ -15,7 +15,8 @@ COPY hs-lookup ./hs-lookup
 COPY .env.example ./.env.example
 
 ENV NODE_ENV=production
-ENV HS_LOOKUP_PORT=8790
+# Railway injects PORT; local docker default 8790
+ENV PORT=8790
 EXPOSE 8790
 WORKDIR /app
-CMD ["npx", "tsx", "hs-lookup/src/server.ts"]
+CMD ["npm", "run", "start", "-w", "@neo-cha/hs-lookup"]
