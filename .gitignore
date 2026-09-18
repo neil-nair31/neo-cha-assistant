@@ -24,7 +24,6 @@ client-portal/web/node_modules/
 client-portal/web/dist/
 neologistics/node_modules/
 neologistics/dist/
-neologistics/scraped/
 client-portal/data/runtime.json
 notifications-digest/data/*.sqlite
 notifications-digest/data/*.db
@@ -32,3 +31,4 @@ notifications-digest/data/*.db
 notifications-digest/data/subscribers.json
 
 notifications-digest/data/content-machine-state.json
+neologistics/public/videos/hero-containers-coverr.mp4
