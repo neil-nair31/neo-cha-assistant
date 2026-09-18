@@ -22,6 +22,9 @@ tmp/
 birthday-for-her/
 client-portal/web/node_modules/
 client-portal/web/dist/
+neologistics/node_modules/
+neologistics/dist/
+neologistics/scraped/
 client-portal/data/runtime.json
 notifications-digest/data/*.sqlite
 notifications-digest/data/*.db

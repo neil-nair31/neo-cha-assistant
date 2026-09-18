@@ -8,10 +8,13 @@
     "widget",
     "hs-lookup",
     "notifications-digest",
-    "client-portal"
+    "client-portal",
+    "neologistics"
   ],
   "scripts": {
     "dev": "npm run dev -w server",
+    "dev:site": "npm run dev -w @neo-cha/site",
+    "build:site": "npm run build -w @neo-cha/site",
     "dev:widget": "npm run dev -w widget",
     "build": "npm run build -w widget && npm run build -w @neo-cha/server",
     "start": "npm run start -w @neo-cha/server",

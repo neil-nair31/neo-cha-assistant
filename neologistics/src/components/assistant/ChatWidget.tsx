@@ -1,0 +1,373 @@
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import "./ChatWidget.css";
+import { ASSIST_STARTERS, formatAssistReply } from "./formatReply.tsx";
+
+type Msg = {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  citations?: string[];
+};
+
+type PublicConfig = {
+  welcome: string;
+  consentText: string;
+  privacyPolicyUrl: string;
+  brand: { name: string; company: string; primary: string; accent: string };
+};
+
+const API_BASE = import.meta.env.VITE_API_BASE ?? "";
+const OFFLINE_WELCOME =
+  "Neo Assist is temporarily unavailable. Email customercare@neologistics.org or call Cochin 0484 2669737 / Chennai 044 28419747 — Neo’s CHA desk will help.";
+
+function sessionId(): string {
+  const key = "neo_assist_sid";
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
+async function api<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    ...init,
+    headers: {
+      "Content-Type": "application/json",
+      ...(init?.headers ?? {}),
+    },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.reply || err.error || "Request failed");
+  }
+  return res.json() as Promise<T>;
+}
+
+export function ChatWidget() {
+  const [open, setOpen] = useState(false);
+  const [cfg, setCfg] = useState<PublicConfig | null>(null);
+  const [messages, setMessages] = useState<Msg[]>([]);
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [conversationId, setConversationId] = useState<string | undefined>();
+  const [showConsent, setShowConsent] = useState(false);
+  const [consentText, setConsentText] = useState("");
+  const [status, setStatus] = useState("");
+  const [showDeskCta, setShowDeskCta] = useState(false);
+  const [leadName, setLeadName] = useState("");
+  const [leadCompany, setLeadCompany] = useState("");
+  const [leadEmail, setLeadEmail] = useState("");
+  const [leadPhone, setLeadPhone] = useState("");
+  const [consentBusy, setConsentBusy] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+  const sid = useMemo(() => sessionId(), []);
+
+  useEffect(() => {
+    api<PublicConfig>("/api/assistant/config")
+      .then((c) => {
+        setCfg(c);
+        setConsentText(c.consentText);
+        setMessages([
+          {
+            id: "welcome",
+            role: "assistant",
+            content: c.welcome,
+          },
+        ]);
+      })
+      .catch(() => {
+        setMessages([
+          {
+            id: "welcome",
+            role: "assistant",
+            content: OFFLINE_WELCOME,
+          },
+        ]);
+        setShowDeskCta(true);
+      });
+  }, []);
+
+  useEffect(() => {
+    listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages, open, showConsent]);
+
+  async function send(preset?: string) {
+    const text = (preset ?? input).trim();
+    if (!text || busy) return;
+    setInput("");
+    setBusy(true);
+    setStatus("");
+    const userMsg: Msg = { id: crypto.randomUUID(), role: "user", content: text };
+    setMessages((m) => [...m, userMsg]);
+
+    try {
+      const data = await api<{
+        conversationId: string;
+        reply: string;
+        citations?: string[];
+        needsConsent?: boolean;
+        consent?: { text: string };
+        offline?: boolean;
+        escalate?: boolean;
+      }>("/api/assistant/chat", {
+        method: "POST",
+        body: JSON.stringify({
+          message: text,
+          sessionId: sid,
+          conversationId,
+          language: "en",
+        }),
+      });
+      setConversationId(data.conversationId);
+      setMessages((m) => [
+        ...m,
+        {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content: data.reply,
+          citations: data.citations,
+        },
+      ]);
+      if (data.needsConsent) {
+        setShowConsent(true);
+        if (data.consent?.text) setConsentText(data.consent.text);
+      }
+      if (data.escalate || data.needsConsent) setShowDeskCta(true);
+      if (data.escalate) setStatus("Neo’s team has been flagged for follow-up.");
+      if (data.offline) setStatus("Leave your details below — Neo will call you back.");
+      window.dispatchEvent(
+        new CustomEvent("neo-assist-analytics", {
+          detail: { event: "question_asked", conversationId: data.conversationId },
+        })
+      );
+    } catch (e) {
+      setShowDeskCta(true);
+      setMessages((m) => [
+        ...m,
+        {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          content:
+            e instanceof Error && !/fetch|network|failed to fetch/i.test(e.message)
+              ? e.message
+              : "I'm having trouble right now — email customercare@neologistics.org or call 0484 2669737 and our team will help.",
+        },
+      ]);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function acceptConsent() {
+    if (!conversationId) return;
+    const email = leadEmail.trim();
+    const phone = leadPhone.trim();
+    if (!email && !phone) {
+      setStatus("Add an email or phone so Neo can reach you.");
+      return;
+    }
+    setConsentBusy(true);
+    try {
+      await api("/api/assistant/consent", {
+        method: "POST",
+        body: JSON.stringify({
+          conversationId,
+          sessionId: sid,
+          accepted: true,
+          name: leadName.trim() || undefined,
+          company: leadCompany.trim() || undefined,
+          email: email || undefined,
+          phone: phone || undefined,
+        }),
+      });
+      setShowConsent(false);
+      setShowDeskCta(true);
+      setStatus("Thanks — Neo may contact you about this enquiry.");
+      window.dispatchEvent(
+        new CustomEvent("neo-assist-analytics", {
+          detail: { event: "consent_granted", conversationId },
+        })
+      );
+    } catch {
+      setStatus("Could not save consent — please try again or call the desk.");
+    } finally {
+      setConsentBusy(false);
+    }
+  }
+
+  return (
+    <div id="neo-assist-root">
+      {open && (
+        <section
+          className="neo-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+        >
+          <header className="neo-header">
+            <div>
+              <h2 id={titleId}>{cfg?.brand.name ?? "Neo Assist"}</h2>
+              <p>Licensed CHA · Cochin & Chennai · Neo Logistics</p>
+            </div>
+            <button
+              type="button"
+              className="neo-close"
+              aria-label="Close chat"
+              onClick={() => setOpen(false)}
+            >
+              ✕
+            </button>
+          </header>
+
+          <div className="neo-messages" ref={listRef} aria-live="polite">
+            {messages.map((m) => (
+              <div key={m.id} className={`neo-bubble ${m.role}`}>
+                <div className="neo-bubble-body">
+                  {m.role === "assistant" ? formatAssistReply(m.content) : m.content}
+                </div>
+                {m.citations && m.citations.length > 0 && (
+                  <div className="neo-citations">Sources: {m.citations.join(" · ")}</div>
+                )}
+              </div>
+            ))}
+            {messages.length <= 1 && !busy && (
+              <div className="neo-starters" aria-label="Suggested questions">
+                {ASSIST_STARTERS.map((s) => (
+                  <button
+                    key={s.label}
+                    type="button"
+                    className="neo-starter"
+                    onClick={() => void send(s.text)}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            {busy && (
+              <div className="neo-bubble assistant" aria-busy="true">
+                Neo desk is drafting a reply…
+              </div>
+            )}
+          </div>
+
+          {showConsent && (
+            <div className="neo-consent" role="region" aria-label="Consent notice">
+              <div>{consentText}</div>
+              <div style={{ marginTop: 6 }}>
+                <a href={cfg?.privacyPolicyUrl} target="_blank" rel="noreferrer">
+                  Privacy policy
+                </a>
+              </div>
+              <div className="neo-consent-fields">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={leadName}
+                  onChange={(e) => setLeadName(e.target.value)}
+                  autoComplete="name"
+                  aria-label="Name"
+                />
+                <input
+                  type="text"
+                  placeholder="Company"
+                  value={leadCompany}
+                  onChange={(e) => setLeadCompany(e.target.value)}
+                  autoComplete="organization"
+                  aria-label="Company"
+                />
+                <input
+                  type="email"
+                  placeholder="Email *"
+                  value={leadEmail}
+                  onChange={(e) => setLeadEmail(e.target.value)}
+                  autoComplete="email"
+                  aria-label="Email"
+                />
+                <input
+                  type="tel"
+                  placeholder="Phone *"
+                  value={leadPhone}
+                  onChange={(e) => setLeadPhone(e.target.value)}
+                  autoComplete="tel"
+                  aria-label="Phone"
+                />
+              </div>
+              <p className="neo-consent-hint">Email or phone required.</p>
+              <button type="button" onClick={() => void acceptConsent()} disabled={consentBusy}>
+                {consentBusy ? "Saving…" : "I agree — Neo may contact me"}
+              </button>
+            </div>
+          )}
+
+          {showDeskCta && (
+            <div className="neo-desk-cta" role="group" aria-label="Contact Neo desk">
+              <a href="mailto:customercare@neologistics.org">Email Cochin</a>
+              <a href="tel:+914842669737">Call Cochin</a>
+              <a href="mailto:docschennai@neologistics.org">Email Chennai</a>
+              <a href="tel:+914428419747">Call Chennai</a>
+            </div>
+          )}
+
+          {status && <div className="neo-status">{status}</div>}
+
+          <form
+            className="neo-composer"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void send();
+            }}
+          >
+            <label className="sr-only" htmlFor="neo-assist-input" style={{ position: "absolute", left: -9999 }}>
+              Message
+            </label>
+            <textarea
+              id="neo-assist-input"
+              rows={1}
+              value={input}
+              placeholder="Ask about clearance, AEO, shipping…"
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  void send();
+                }
+              }}
+              disabled={busy}
+            />
+            <button type="submit" disabled={busy || !input.trim()} aria-label="Send message">
+              Send
+            </button>
+          </form>
+        </section>
+      )}
+
+      <button
+        type="button"
+        className="neo-launcher"
+        aria-label={open ? "Close Neo Assist" : "Ask Neo — open chat"}
+        aria-expanded={open}
+        onClick={() => {
+          setOpen((v) => !v);
+          if (!open) {
+            window.dispatchEvent(
+              new CustomEvent("neo-assist-analytics", { detail: { event: "widget_opened" } })
+            );
+          }
+        }}
+      >
+        {open ? (
+          <span className="neo-launcher-x">✕</span>
+        ) : (
+          <span className="neo-launcher-mark">
+            <span className="neo-launcher-brand">Neo</span>
+            <span className="neo-launcher-ask">Ask</span>
+          </span>
+        )}
+      </button>
+    </div>
+  );
+}

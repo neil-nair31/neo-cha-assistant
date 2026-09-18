@@ -1,0 +1,9 @@
+{
+  "name": "Neo Logistics",
+  "short_name": "Neo Logistics",
+  "description": "Licensed customs broker, freight forwarding & warehousing — Cochin & Chennai",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c1733",
+  "theme_color": "#0c1733"
+}
